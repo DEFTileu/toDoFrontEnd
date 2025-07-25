@@ -8,7 +8,12 @@ export default defineConfig({
     exclude: ['lucide-react'],
   },
   server: {
-    // Добавляем разрешенные хосты
-    allowedHosts: ['97fced7f0225.ngrok-free.app'],
+    proxy: {
+      '/uploads': {
+        target: 'https://task-flow-spring-boot-a7b12abc3f71.herokuapp.com/',
+        changeOrigin: true,
+      }
+    },
+    allowedHosts: ["todofrontend-y9ud.onrender.com"," https://todofrontend-y9ud.onrender.com/login"], // Разрешаем все хосты
   },
 });

@@ -1,6 +1,6 @@
 import { User, LoginData, RegisterData } from '../types';
 
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = 'https://task-flow-spring-boot-a7b12abc3f71.herokuapp.com/api';
 const TOKEN_KEY = 'auth_token';
 const DEMO_TOKEN = 'demo_auth_token_12345';
 

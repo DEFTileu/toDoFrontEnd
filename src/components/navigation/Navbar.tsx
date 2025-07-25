@@ -17,7 +17,7 @@ export const Navbar: React.FC = () => {
   const navigation = [
     { name: t('nav.myTasks'), href: '/tasks', icon: CheckSquare },
     { name: t('nav.createTask'), href: '/tasks/create', icon: Plus },
-    { name: t('nav.apiDocs'), href: '/api-endpoints', icon: Code },
+    // { name: t('nav.apiDocs'), href: '/api-endpoints', icon: Code },
   ];
 
   const languages: { code: Language; label: string }[] = [

@@ -1,7 +1,7 @@
 import { Task, CreateTaskData, UpdateTaskData } from '../types';
 import { API_CONFIG } from './apiConfig';
 
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = 'https://task-flow-spring-boot-a7b12abc3f71.herokuapp.com/api';
 const DEMO_TOKEN = 'demo_auth_token_12345';
 
 // Demo tasks data
