@@ -10,7 +10,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/uploads': {
-        target: 'https://task-flow-spring-boot-a7b12abc3f71.herokuapp.com/',
+        target: 'https://task-flow-spring-boot-a7b12abc3f71.herokuapp.com',
         changeOrigin: true,
       }
     },
