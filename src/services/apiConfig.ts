@@ -50,12 +50,14 @@ export const HTTP_STATUS = {
 
 // Error messages
 export const ERROR_MESSAGES = {
-  NETWORK_ERROR: 'Network error. Please check your connection.',
-  UNAUTHORIZED: 'You are not authorized. Please log in again.',
-  SERVER_ERROR: 'Server error. Please try again later.',
-  VALIDATION_ERROR: 'Please check your input and try again.',
-  NOT_FOUND: 'The requested resource was not found.',
-  CONFLICT: 'A conflict occurred. Please refresh and try again.',
+  INVALID_CREDENTIALS: 'Неверный email или пароль',
+  SESSION_EXPIRED: 'Сессия истекла, пожалуйста, войдите снова',
+  NETWORK_ERROR: 'Ошибка сети, проверьте подключение к интернету',
+  SERVER_ERROR: 'Ошибка сервера, попробуйте позже',
+  TIMEOUT: 'Превышено время ожидания ответа от сервера',
+  UNAUTHORIZED: 'Необходима авторизация',
+  FORBIDDEN: 'Доступ запрещен',
+  REGISTRATION_FAILED: 'Регистрация не удалась, попробуйте позже'
 } as const;
 
 // Request configuration
@@ -66,87 +68,158 @@ export const createRequestConfig = (token?: string): RequestInit => ({
   },
 });
 
-// Fetch with timeout utility
-export const fetchWithTimeout = async (
-  url: string, 
-  options: RequestInit = {}
-): Promise<Response> => {
+// Fetch with timeout wrapper
+export const fetchWithTimeout = async (url: string, options: RequestInit = {}) => {
+  const timeout = API_CONFIG.TIMEOUT;
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), API_CONFIG.REQUEST_TIMEOUT);
-  
+  const id = setTimeout(() => controller.abort(), timeout);
+
   try {
     const response = await fetch(url, {
       ...options,
-      signal: controller.signal,
+      signal: controller.signal
     });
-    clearTimeout(timeoutId);
+    clearTimeout(id);
     return response;
   } catch (error) {
-    clearTimeout(timeoutId);
-    if (error instanceof Error && error.name === 'AbortError') {
-      throw new Error('Request timeout - server is taking too long to respond');
+    clearTimeout(id);
+    if (error instanceof Error) {
+      if (error.name === 'AbortError') {
+        throw new Error(ERROR_MESSAGES.TIMEOUT);
+      }
     }
-    throw error;
+    throw new Error(ERROR_MESSAGES.NETWORK_ERROR);
   }
 };
 
-// Token storage keys
-const TOKEN_KEY = 'auth_token';
-const REFRESH_TOKEN_KEY = 'refresh_token';
+// Определение типа для tokenStorage
+interface TokenStorage {
+  getTokens: () => { accessToken: string; refreshToken: string } | null;
+  setTokens: (tokens: { accessToken: string; refreshToken: string }) => void;
+  clearTokens: () => void;
+  isTokenExpired: () => boolean;
+  getAuthToken: () => string | null;
+  getRefreshToken: () => string | null;
+}
 
-// Token helpers
-export const getAuthToken = (): string | null => localStorage.getItem(TOKEN_KEY);
-export const setAuthToken = (token: string): void => localStorage.setItem(TOKEN_KEY, token);
-export const removeAuthToken = (): void => localStorage.removeItem(TOKEN_KEY);
-export const getRefreshToken = (): string | null => localStorage.getItem(REFRESH_TOKEN_KEY);
-export const setRefreshToken = (token: string): void => localStorage.setItem(REFRESH_TOKEN_KEY, token);
-export const removeRefreshToken = (): void => localStorage.removeItem(REFRESH_TOKEN_KEY);
+// Token storage implementation
+export const tokenStorage: TokenStorage = {
+  getTokens: () => {
+    try {
+      const tokens = localStorage.getItem('auth_tokens');
+      return tokens ? JSON.parse(tokens) : null;
+    } catch {
+      return null;
+    }
+  },
 
-// Refresh access token
-export const refreshAuthToken = async (): Promise<boolean> => {
-  const refreshToken = getRefreshToken();
-  if (!refreshToken) return false;
+  setTokens: (tokens: { accessToken: string; refreshToken: string }) => {
+    localStorage.setItem('auth_tokens', JSON.stringify(tokens));
+  },
+
+  clearTokens: () => {
+    localStorage.removeItem('auth_tokens');
+  },
+
+  isTokenExpired: (): boolean => {
+    const token = tokenStorage.getAuthToken();
+    if (!token) return true;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const expTime = payload.exp * 1000; // конвертируем в миллисекунды
+      return Date.now() >= expTime;
+    } catch {
+      return true;
+    }
+  },
+
+  getAuthToken: () => {
+    const tokens = tokenStorage.getTokens();
+    return tokens?.accessToken || null;
+  },
+
+  getRefreshToken: () => {
+    const tokens = tokenStorage.getTokens();
+    return tokens?.refreshToken || null;
+  }
+};
+
+// Fetch with authentication
+export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
+  const token = tokenStorage.getAuthToken();
+
+  if (!token) {
+    throw new Error(ERROR_MESSAGES.UNAUTHORIZED);
+  }
+
+  const authOptions = {
+    ...options,
+    headers: {
+      ...options.headers,
+      'Authorization': `Bearer ${token}`,
+    },
+  };
+
+  try {
+    const response = await fetchWithTimeout(url, authOptions);
+
+    if (response.status === HTTP_STATUS.UNAUTHORIZED) {
+      // Токен истек, пытаемся обновить
+      const refreshed = await refreshToken();
+      if (refreshed) {
+        // Повторяем запрос с новым токеном
+        authOptions.headers['Authorization'] = `Bearer ${tokenStorage.getAuthToken()}`;
+        return fetchWithTimeout(url, authOptions);
+      } else {
+        throw new Error(ERROR_MESSAGES.SESSION_EXPIRED);
+      }
+    }
+
+    return response;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error(ERROR_MESSAGES.NETWORK_ERROR);
+  }
+};
+
+// Token refresh function
+export async function refreshToken(): Promise<boolean> {
+  const refreshToken = tokenStorage.getRefreshToken();
+
+  if (!refreshToken) {
+    return false;
+  }
+
   try {
     const response = await fetchWithTimeout(
       `${API_CONFIG.BASE_URL}${API_ENDPOINTS.REFRESH_TOKEN}`,
       {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ refreshToken })
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ refreshToken }),
       }
     );
-    if (!response.ok) return false;
+
+    if (!response.ok) {
+      tokenStorage.clearTokens();
+      return false;
+    }
+
     const data = await response.json();
-    if (data.token) setAuthToken(data.token);
-    if (data.refreshToken) setRefreshToken(data.refreshToken);
+
+    const tokens = { accessToken: data.accessToken, refreshToken: data.refreshToken };
+    tokenStorage.setTokens(tokens);
     return true;
   } catch {
+    tokenStorage.clearTokens();
     return false;
   }
-};
+}
 
-// Fetch wrapper with automatic token refresh
-export const fetchWithAuth = async (
-  url: string,
-  options: RequestInit = {}
-): Promise<Response> => {
-  const token = getAuthToken();
-  const headers: HeadersInit = { ...(options.headers || {}) };
-  if (!headers['Content-Type'] && !(options.body instanceof FormData)) {
-    headers['Content-Type'] = 'application/json';
-  }
-  if (token) headers['Authorization'] = `Bearer ${token}`;
-  let response = await fetchWithTimeout(url, { ...options, headers });
-  if (response.status === HTTP_STATUS.UNAUTHORIZED) {
-    const refreshed = await refreshAuthToken();
-    if (refreshed) {
-      const newToken = getAuthToken();
-      if (newToken) headers['Authorization'] = `Bearer ${newToken}`;
-      response = await fetchWithTimeout(url, { ...options, headers });
-    } else {
-      removeAuthToken();
-      removeRefreshToken();
-    }
-  }
-  return response;
-};
+// Helper function to get auth token
+export const getAuthToken = () => tokenStorage.getAuthToken();

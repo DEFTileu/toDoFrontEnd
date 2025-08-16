@@ -3,7 +3,6 @@ import { Calendar, Clock, Edit3, Trash2, User, Target, CheckCircle, AlertCircle,
 import { useTranslation } from '../../hooks/useTranslation';
 import { useTasks } from '../../contexts/TasksContext';
 import { useToast } from '../../contexts/ToastContext';
-import { useAuth } from '../../contexts/AuthContext';
 import { TaskPreview } from '../../types';
 import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
@@ -34,7 +33,6 @@ export const TaskPreviewModal: React.FC<TaskPreviewModalProps> = ({
   const [tempDescription, setTempDescription] = useState('');
   const [tempStatus, setTempStatus] = useState<'todo' | 'in-progress' | 'done'>('todo');
   const { getTaskById, deleteTask, addComment, updateTask, updateTaskStatus } = useTasks();
-  const { user } = useAuth();
   const { showToast } = useToast();
   const { t } = useTranslation();
 
@@ -447,7 +445,7 @@ export const TaskPreviewModal: React.FC<TaskPreviewModalProps> = ({
                           {taskPreview.sprint.name}
                         </p>
                         <p className="text-xs text-gray-500">
-                          {taskPreview.sprint.isActive ? 'Active' : 'Completed'}
+                          {taskPreview.sprint.active ? 'Active' : 'Completed'}
                         </p>
                       </div>
                     </div>

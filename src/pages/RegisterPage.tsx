@@ -14,7 +14,6 @@ export const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const [showVerificationModal, setShowVerificationModal] = React.useState(false);
   const [registrationEmail, setRegistrationEmail] = React.useState('');
-  const [pendingRegistrationData, setPendingRegistrationData] = React.useState<RegisterData | null>(null);
 
   if (loading) {
     return (
@@ -32,10 +31,11 @@ export const RegisterPage: React.FC = () => {
     try {
       const response = await registerUser(data.name, data.email, data.password);
       if (response.success) {
-        setPendingRegistrationData(data);
         setRegistrationEmail(data.email);
         setShowVerificationModal(true);
         showToast(response.message || t('auth.verificationEmailSent'), 'success');
+      } else {
+        showToast(response.message || t('auth.registrationFailed'), 'error');
       }
     } catch (error) {
       showToast((error as Error).message, 'error');
@@ -54,14 +54,18 @@ export const RegisterPage: React.FC = () => {
   };
 
   return (
-    <>
-      <RegisterForm onSubmit={handleRegister} />
-      <EmailVerificationModal
-        isOpen={showVerificationModal}
-        onClose={() => setShowVerificationModal(false)}
-        email={registrationEmail}
-        onVerificationSuccess={handleVerificationSuccess}
-      />
-    </>
+    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <RegisterForm onSubmit={handleRegister} />
+        {showVerificationModal && (
+          <EmailVerificationModal
+            isOpen={showVerificationModal}
+            onClose={() => setShowVerificationModal(false)}
+            email={registrationEmail}
+            onVerificationSuccess={handleVerificationSuccess}
+          />
+        )}
+      </div>
+    </div>
   );
 };

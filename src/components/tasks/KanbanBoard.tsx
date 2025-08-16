@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
-import { Plus, MessageSquare } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useTasks } from '../../contexts/TasksContext';
 import { useToast } from '../../contexts/ToastContext';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -8,10 +8,9 @@ import { KanbanColumn } from './KanbanColumn';
 import { Modal } from '../common/Modal';
 import { TaskForm } from './TaskForm';
 import { TaskPreviewModal } from './TaskPreviewModal';
-import { TaskComments } from './TaskComments';
 import { LoadingSpinner } from '../common/LoadingSpinner';
 import { Button } from '../common/Button';
-import { Task, CreateTaskData, TaskStatus, TaskPreview } from '../../types';
+import { Task, CreateTaskData, TaskStatus } from '../../types';
 
 export const KanbanBoard: React.FC = () => {
   const { tasks, loading, error, fetchTasks, createTask, updateTask, updateTaskStatus, getTaskById } = useTasks();

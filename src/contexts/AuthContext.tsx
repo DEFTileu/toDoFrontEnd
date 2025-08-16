@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
 import { User, AuthState } from '../types';
 import { authService } from '../services/authService';
-import { getAuthToken } from '../services/apiConfig';
+import {API_CONFIG, API_ENDPOINTS, fetchWithTimeout, getAuthToken, refreshToken} from '../services/apiConfig';
 
 interface AuthContextType extends AuthState {
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<any>;
   register: (name: string, email: string, password: string) => Promise<{ success: boolean, message?: string }>;
   verifyEmail: (email: string, code: string) => Promise<void>;
   resendVerification: (email: string) => Promise<void>;
@@ -62,36 +62,48 @@ const initialState: AuthState = {
 };
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [state, dispatch] = useReducer(authReducer, initialState);
+  const [state, dispatch] = useReducer(authReducer, {
+    user: null,
+    isAuthenticated: false,
+    loading: true,
+  });
 
-  useEffect(() => {
-    const initializeAuth = async () => {
-      dispatch({ type: 'AUTH_START' });
-      const token = getAuthToken();
-      if (token) {
-        const stored = localStorage.getItem('auth_user');
-        if (stored) {
-          dispatch({ type: 'AUTH_SUCCESS', payload: JSON.parse(stored) });
-        }
-        try {
-          const user = await authService.getCurrentUser();
-          if (user) {
-            dispatch({ type: 'AUTH_SUCCESS', payload: user });
-            localStorage.setItem('auth_user', JSON.stringify(user));
-          } else {
-            dispatch({ type: 'AUTH_FAILURE' });
-            localStorage.removeItem('auth_user');
+  const refreshSession = async () => {
+    try {
+
+      const responseL = await fetchWithTimeout(
+          `${API_CONFIG.BASE_URL}${API_ENDPOINTS.REFRESH_TOKEN}`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ refreshToken }),
           }
-        } catch {
-          dispatch({ type: 'AUTH_FAILURE' });
-          localStorage.removeItem('auth_user');
-        }
+      );
+      const response = responseL.json();
+      if (response.user) {
+        dispatch({ type: 'AUTH_SUCCESS', payload: response.user });
       } else {
         dispatch({ type: 'AUTH_FAILURE' });
-        localStorage.removeItem('auth_user');
+      }
+    } catch (error) {
+      dispatch({ type: 'AUTH_FAILURE' });
+      console.error('Failed to refresh session:', error);
+    }
+  };
+
+  useEffect(() => {
+    const initAuth = async () => {
+      const token = getAuthToken();
+      if (token) {
+        await refreshSession();
+      } else {
+        dispatch({ type: 'AUTH_FAILURE' });
       }
     };
-    initializeAuth();
+
+    initAuth();
 
     const handleStorage = (event: StorageEvent) => {
       if (event.key === 'auth_user') {
@@ -112,7 +124,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const login = async (email: string, password: string) => {
     dispatch({ type: 'AUTH_START' });
     try {
-      const user = await authService.login(email, password);
+      const data = await authService.login(email, password);
+      const user = data.user;
       localStorage.setItem('auth_user', JSON.stringify(user));
       dispatch({ type: 'AUTH_SUCCESS', payload: user });
     } catch (error) {
@@ -204,8 +217,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+  if (!context) {
+    throw new Error('useAuth должен использоваться внутри AuthProvider');
   }
   return context;
 };

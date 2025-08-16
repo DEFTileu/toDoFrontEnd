@@ -42,14 +42,49 @@ export const en = {
     confirmPasswordRequired: 'Please confirm your password',
     passwordsNotMatch: 'Passwords do not match',
 
-    // Email verification
-    emailVerification: 'Email Verification',
-    verifyYourEmail: 'Verify your email',
-    verificationEmailSent: 'We sent a verification email to:',
-    checkEmailInstructions: 'Please check your email and click the link in the message to activate your account.',
-    continueToApp: 'Continue to App',
-    didntReceiveEmail: "Didn't receive the email?",
-    resendEmail: 'Resend email',
+    emailVerification: {
+      emailVerification: 'Email Verification',
+      verifyYourEmail: 'Verify your email',
+      verificationEmailSent: 'We sent a verification email to:',
+      checkEmailInstructions: 'Please check your email and click the link in the message to activate your account.',
+      continueToApp: 'Continue to App',
+      didntReceiveEmail: "Didn't receive the email?",
+      resendEmail: 'Resend email',
+
+      // Новое
+      title: 'Verify Your Email',
+      subtitle: 'Check Your Email',
+      message: "We've sent a verification code to",
+      inputLabel: 'Verification Code',
+      inputPlaceholder: 'Enter 6-digit code',
+      inputError: {
+        required: 'Verification code is required',
+        invalid: 'Please enter a valid 6-digit code',
+      },
+      resendPrompt: "Didn't receive the code?",
+      resendButton: 'Resend Code',
+      resendCountdown: 'Resend in {{count}}s',
+      cancel: 'Cancel',
+      verify: 'Verify Email',
+      success: 'Email verified successfully!',
+      failed: 'Verification failed',
+      resendSuccess: 'Verification code sent!',
+      resendFailed: 'Failed to resend code',
+      securityNoteTitle: 'Security Note:',
+      securityNote: "The verification code will expire in 10 minutes. If you don't see the email, check your spam folder.",
+      checkEmail: 'Check your email',
+      sentCode: 'We have sent a verification code to:',
+      verificationCode: 'Verification Code',
+      codeRequired: 'Enter verification code',
+      invalidCode: 'Invalid code format',
+      codePlaceholder: 'Enter 6-digit code',
+      didNotReceive: "Haven't received the code?",
+      resendIn: 'Resend in {{count}}s',
+      resendCode: 'Resend Code',
+      verifyEmail: 'Verify',
+      codeSent: 'Verification code sent!',
+    },
+
   },
 
   // Tasks
@@ -156,7 +191,7 @@ export const en = {
     errorLoadingTasks: 'Error Loading Tasks',
     welcomeMessage: 'Welcome back!',
     accountCreatedSuccess: 'Account created successfully!',
-    
+
     // Time formats
     today: 'Today',
     yesterday: 'Yesterday',
@@ -164,13 +199,38 @@ export const en = {
     yesterdayAt: 'Yesterday at',
     dueToday: 'Due today',
     overdue: 'Overdue',
-    
+
     // Buttons
     showPassword: 'Show password',
     hidePassword: 'Hide password',
     closeModal: 'Close modal',
     closeNotification: 'Close notification',
     cancel: 'Cancel',
+    save: 'Save',
+  },
+  passwordChange: {
+    title: 'Change Password',
+    description: 'To change your password, please enter your current password and a new password.',
+    currentPassword: 'Current Password',
+    newPassword: 'New Password',
+    confirmPassword: 'Confirm New Password',
+    currentPasswordRequired: 'Current password is required',
+    newPasswordRequired: 'New password is required',
+    confirmPasswordRequired: 'Please confirm your new password',
+    passwordMinLength: 'Password must be at least 8 characters',
+    passwordPattern: 'Password must contain uppercase, lowercase letters and numbers',
+    passwordsDoNotMatch: 'Passwords do not match',
+    currentPasswordPlaceholder: 'Enter your current password',
+    newPasswordPlaceholder: 'Enter new password',
+    confirmPasswordPlaceholder: 'Confirm new password',
+    passwordRequirements: 'Password Requirements',
+    requirementMinLength: 'Minimum 8 characters',
+    requirementUppercase: 'At least one uppercase letter',
+    requirementLowercase: 'At least one lowercase letter',
+    requirementNumber: 'At least one number',
+    changePassword: 'Change Password',
+    success: 'Password changed successfully',
+    error: 'Failed to change password'
   },
 
   // API Documentation
@@ -188,6 +248,19 @@ export const en = {
     implementationGuidelines: 'Implementation Guidelines',
     generalRequirements: 'General Requirements',
     securityPerformance: 'Security & Performance',
+  },
+
+  // Sprints
+  sprints: {
+    manageAndReview: 'Manage and review your project sprints',
+    allSprints: 'All Sprints',
+    selectSprint: 'Select a Sprint',
+    chooseSprint: 'Choose a sprint from the list to view its tasks and details',
+    active: 'Active',
+    activeSprint: 'Active Sprint',
+    editSprint: 'Edit Sprint',
+    sprintName: 'Sprint Name',
+    sprintGoal: 'Sprint Goal',
   },
 };
 

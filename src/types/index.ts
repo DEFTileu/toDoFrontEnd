@@ -31,6 +31,7 @@ export interface TaskComment {
 export interface Sprint {
   id: string;
   name: string;
+  goal: string;
   startDate: string;
   endDate: string;
   active: boolean;
@@ -79,6 +80,14 @@ export interface ApiResponse<T> {
   data: T;
   message: string;
   success: boolean;
+}
+
+export interface LoginResponse {
+  success: boolean;
+  message: string;
+  user: User;
+  token: string;
+    refreshToken: string;
 }
 
 export interface ToastMessage {

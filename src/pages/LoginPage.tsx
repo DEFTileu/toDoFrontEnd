@@ -26,9 +26,14 @@ export const LoginPage: React.FC = () => {
 
   const handleLogin = async (data: LoginData) => {
     try {
-      await login(data.email, data.password);
-      showToast(t('common.welcomeMessage'), 'success');
-      navigate('/tasks');
+      const response = await login(data.email, data.password);
+      // Сервер вернул успешный ответ с токенами и данными пользователя
+      if (response.success && response.accessToken && response.user) {
+        showToast(t('common.welcomeMessage'), 'success');
+        navigate('/tasks');
+      } else {
+        throw new Error(t('auth.invalidCredentials'));
+      }
     } catch (error) {
       showToast((error as Error).message, 'error');
     }

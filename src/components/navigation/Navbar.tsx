@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, CheckSquare, Plus, User, LogOut, ChevronDown, Globe, Code, Target } from 'lucide-react';
+import { Menu, X, CheckSquare, User, LogOut, ChevronDown, Globe, Target } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import { useLanguage, getLanguageLabel, Language } from '../../contexts/LanguageContext';
+import { useLanguage, Language } from '../../contexts/LanguageContext';
 import { useTranslation } from '../../hooks/useTranslation';
 import { getInitials } from '../../utils/formatters';
 
 export const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const { user, logout } = useAuth();
+  const { user, loading, isAuthenticated, logout } = useAuth();
   const { language, setLanguage } = useLanguage();
   const { t } = useTranslation();
   const location = useLocation();
@@ -17,7 +17,7 @@ export const Navbar: React.FC = () => {
   const navigation = [
     { name: t('nav.myTasks'), href: '/tasks', icon: CheckSquare },
     { name: t('nav.sprints'), href: '/sprint-history', icon: Target },
-    { name: t('nav.apiDocs'), href: '/api-endpoints', icon: Code },
+    // { name: t('nav.apiDocs'), href: '/api-endpoints', icon: Code },
   ];
 
   const languages: { code: Language; label: string }[] = [
@@ -78,43 +78,46 @@ export const Navbar: React.FC = () => {
 
           {/* User Menu */}
           <div className="hidden lg:flex items-center">
-            <div className="relative">
-              <button
-                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                className="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-gray-50 transition-colors min-h-[44px]"
-              >
-                {user?.avatar ? (
-                  <img
-                    src={user.avatar}
-                    alt={user.name}
-                    className="w-8 h-8 rounded-full object-cover border-2 border-gray-200"
-                  />
-                ) : (
-                  <div className="w-8 h-8 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
-                    {user && getInitials(user.name)}
-                  </div>
-                )}
-                <span className="text-sm text-gray-700">{user?.name}</span>
-                <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${isUserMenuOpen ? 'rotate-180' : ''}`} />
-              </button>
+            {loading ? (
+              <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
+            ) : isAuthenticated && user ? (
+              <div className="relative">
+                <button
+                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                  className="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-gray-50 transition-colors min-h-[44px]"
+                >
+                  {user.avatar ? (
+                    <img
+                      src={user.avatar}
+                      alt={user.name}
+                      className="w-8 h-8 rounded-full object-cover border-2 border-gray-200"
+                    />
+                  ) : (
+                    <div className="w-8 h-8 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
+                      {getInitials(user.name)}
+                    </div>
+                  )}
+                  <span className="text-sm text-gray-700">{user.name}</span>
+                  <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${isUserMenuOpen ? 'rotate-180' : ''}`} />
+                </button>
 
 
-              {/* User Dropdown Menu */}
-              {isUserMenuOpen && (
+                {/* User Dropdown Menu */}
+                {isUserMenuOpen && (
                   <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
                     {/* Profile Section */}
                     <div className="px-4 py-3 border-b border-gray-100">
                       <div className="flex items-center space-x-3">
                         {user?.avatar ? (
-                            <img
-                                src={user.avatar}
-                                alt={user.name}
-                                className="w-10 h-10 rounded-full object-cover border-2 border-gray-200"
-                            />
+                          <img
+                            src={user.avatar}
+                            alt={user.name}
+                            className="w-10 h-10 rounded-full object-cover border-2 border-gray-200"
+                          />
                         ) : (
-                            <div className="w-10 h-10 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white font-medium">
-                              {user && getInitials(user.name)}
-                            </div>
+                          <div className="w-10 h-10 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white font-medium">
+                            {user && getInitials(user.name)}
+                          </div>
                         )}
                         <div>
                           <div className="text-sm font-medium text-gray-900">{user?.name}</div>
@@ -125,9 +128,9 @@ export const Navbar: React.FC = () => {
 
                     {/* Profile Link */}
                     <Link
-                        to="/profile"
-                        onClick={() => setIsUserMenuOpen(false)}
-                        className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                      to="/profile"
+                      onClick={() => setIsUserMenuOpen(false)}
+                      className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                     >
                       <User className="w-4 h-4" />
                       <span>{t('nav.profileSettings')}</span>
@@ -141,32 +144,41 @@ export const Navbar: React.FC = () => {
                       </div>
                       <div className="space-y-1">
                         {languages.map((lang) => (
-                            <button
-                                key={lang.code}
-                                onClick={() => handleLanguageChange(lang.code)}
-                                className={`w-full text-left px-2 py-1 text-xs rounded transition-colors ${
-                                    language === lang.code
-                                        ? 'bg-indigo-50 text-indigo-700'
-                                        : 'text-gray-600 hover:bg-gray-50'
-                                }`}
-                            >
-                              {lang.label}
-                            </button>
+                          <button
+                            key={lang.code}
+                            onClick={() => handleLanguageChange(lang.code)}
+                            className={`w-full text-left px-2 py-1 text-xs rounded transition-colors ${
+                              language === lang.code
+                                ? 'bg-indigo-50 text-indigo-700'
+                                : 'text-gray-600 hover:bg-gray-50'
+                            }`}
+                          >
+                            {lang.label}
+                          </button>
                         ))}
                       </div>
                     </div>
 
                     {/* Logout */}
                     <button
-                        onClick={handleLogout}
-                        className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors border-t border-gray-100"
+                      onClick={handleLogout}
+                      className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors border-t border-gray-100"
                     >
                       <LogOut className="w-4 h-4" />
                       <span>{t('nav.logout')}</span>
                     </button>
                   </div>
-              )}
-            </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                className="flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 transition-colors"
+              >
+                <User className="w-4 h-4" />
+                <span>{t('auth.login')}</span>
+              </Link>
+            )}
           </div>
 
           {/* Click outside to close dropdown */}

@@ -33,7 +33,7 @@ export const ru: TranslationKeys = {
     alreadyHaveAccount: 'Уже есть аккаунт?',
     demoCredentials: 'Демо данные:',
     email: 'Email:',
-    
+
     // Validation messages
     emailRequired: 'Email обязателен',
     invalidEmail: 'Неверный email адрес',
@@ -45,13 +45,49 @@ export const ru: TranslationKeys = {
     passwordsNotMatch: 'Пароли не совпадают',
 
     // Email verification
-    emailVerification: 'Подтверждение Email',
-    verifyYourEmail: 'Подтвердите ваш email',
-    verificationEmailSent: 'Мы отправили письмо с подтверждением на:',
-    checkEmailInstructions: 'Пожалуйста, проверьте вашу почту и нажмите на ссылку в письме для активации аккаунта.',
-    continueToApp: 'Продолжить в приложение',
-    didntReceiveEmail: 'Не получили письмо?',
-    resendEmail: 'Отправить повторно',
+    emailVerification: {
+      emailVerification: 'Подтверждение почты',
+      verifyYourEmail: 'Подтвердите вашу почту',
+      verificationEmailSent: 'Мы отправили письмо с подтверждением на:',
+      checkEmailInstructions: 'Пожалуйста, проверьте вашу почту и перейдите по ссылке в письме, чтобы активировать аккаунт.',
+      continueToApp: 'Перейти в приложение',
+      didntReceiveEmail: 'Не получили письмо?',
+      resendEmail: 'Отправить письмо повторно',
+
+      // Новое
+      title: 'Подтверждение Email',
+      subtitle: 'Проверьте вашу почту',
+      message: 'Мы отправили код подтверждения на',
+      checkEmail: 'Проверьте вашу почту',
+      sentCode: 'Мы отправили код подтверждения на указанный адрес:',
+      verificationCode: 'Код подтверждения',
+      codeRequired: 'Введите код подтверждения',
+      invalidCode: 'Неверный формат кода',
+      codePlaceholder: 'Введите 6-значный код',
+      didNotReceive: 'Не получили код?',
+      resendIn: 'Повторная отправка через {{count}}с',
+      resendCode: 'Отправить код повторно',
+      verifyEmail: 'Подтвердить',
+      codeSent: 'Код подтверждения отправлен!',
+      success: 'Почта успешно подтверждена!',
+      failed: 'Ошибка подтверждения',
+      resendSuccess: 'Код подтверждения отправлен!',
+      resendFailed: 'Не удалось отправить код',
+      securityNoteTitle: 'Примечание по безопасности:',
+      securityNote: 'Код подтверждения истекает через 10 минут. Проверьте папку "Спам", если не видите письмо.',
+      inputLabel: 'Введите код подтверждения',  // Заполнено
+      inputPlaceholder: '6-значный код для подтверждения',  // Заполнено
+      inputError: {
+        required: 'Код подтверждения обязателен',  // Заполнено
+        invalid: 'Пожалуйста, введите правильный 6-значный код',  // Заполнено
+      },
+      resendPrompt: 'Не получили код?',  // Заполнено
+      resendButton: 'Отправить код повторно',  // Заполнено
+      resendCountdown: 'Повторная отправка через {{count}}с',  // Заполнено
+      cancel: 'Отмена',  // Заполнено
+      verify: 'Подтвердить',  // Заполнено
+    }
+
   },
 
   // Tasks
@@ -72,24 +108,24 @@ export const ru: TranslationKeys = {
     createTask: 'Создать Задачу',
     updateTask: 'Обновить Задачу',
     saveChanges: 'Сохранить Изменения',
-    
+
     // Task statuses
     todo: 'К Выполнению',
     inProgress: 'В Процессе',
     done: 'Выполнено',
-    
+
     // Task actions
     editTaskAction: 'Редактировать задачу',
     deleteTask: 'Удалить задачу',
     confirmDelete: 'Вы уверены, что хотите удалить эту задачу?',
-    
+
     // Task stats
     noTasksYet: 'Пока нет задач',
     tasksWaitingToStart: 'Задачи ожидающие начала',
     currentlyWorkingOn: 'В работе',
     successfullyFinished: 'Успешно завершено',
     dropTasksHere: 'Перетащите задачи сюда',
-    
+
     // Messages
     taskCreatedSuccess: 'Задача успешно создана!',
     taskUpdatedSuccess: 'Задача успешно обновлена',
@@ -99,7 +135,7 @@ export const ru: TranslationKeys = {
     failedToUpdateTask: 'Не удалось обновить задачу',
     failedToDeleteTask: 'Не удалось удалить задачу',
     failedToUpdateStatus: 'Не удалось обновить статус задачи',
-    
+
     // Validation
     titleRequired: 'Название обязательно',
     titleMinLength: 'Название должно содержать минимум 3 символа',
@@ -135,13 +171,13 @@ export const ru: TranslationKeys = {
     notifications: 'Уведомления',
     emailNotifications: 'Email уведомления',
     taskReminders: 'Напоминания о задачах',
-    
+
     // Avatar upload
     uploadAvatar: 'Загрузить',
     cancelUpload: 'Отмена',
     changeAvatar: 'Изменить Аватар',
     supportedFormats: 'Поддерживаемые форматы: JPG, PNG, GIF. Макс. размер: 5МБ',
-    
+
     // Messages
     profileUpdatedSuccess: 'Профиль успешно обновлен!',
     avatarUpdatedSuccess: 'Аватар успешно обновлен!',
@@ -158,7 +194,7 @@ export const ru: TranslationKeys = {
     errorLoadingTasks: 'Ошибка Загрузки Задач',
     welcomeMessage: 'Добро пожаловать!',
     accountCreatedSuccess: 'Аккаунт успешно создан!',
-    
+
     // Time formats
     today: 'Сегодня',
     yesterday: 'Вчера',
@@ -166,13 +202,38 @@ export const ru: TranslationKeys = {
     yesterdayAt: 'Вчера в',
     dueToday: 'Срок сегодня',
     overdue: 'Просрочено',
-    
+
     // Buttons
     showPassword: 'Показать пароль',
     hidePassword: 'Скрыть пароль',
     closeModal: 'Закрыть модальное окно',
     closeNotification: 'Закрыть уведомление',
     cancel: 'Отмена',
+    save: 'Сохранить',
+  },
+  passwordChange: {
+    title: 'Изменение пароля',
+    description: 'Для изменения пароля, пожалуйста, введите текущий пароль и новый пароль.',
+    currentPassword: 'Текущий пароль',
+    newPassword: 'Новый пароль',
+    confirmPassword: 'Подтвердите новый пароль',
+    currentPasswordRequired: 'Введите текущий пароль',
+    newPasswordRequired: 'Введите новый пароль',
+    confirmPasswordRequired: 'Подтвердите новый пароль',
+    passwordMinLength: 'Пароль должен содержать минимум 8 символов',
+    passwordPattern: 'Пароль должен содержать заглавные и строчные буквы, и цифры',
+    passwordsDoNotMatch: 'Пароли не совпадают',
+    currentPasswordPlaceholder: 'Введите ваш текущий пароль',
+    newPasswordPlaceholder: 'Введите новый пароль',
+    confirmPasswordPlaceholder: 'Подтвердите новый пароль',
+    passwordRequirements: 'Требования к паролю',
+    requirementMinLength: 'Минимум 8 символов',
+    requirementUppercase: 'Хотя бы одна заглавная буква',
+    requirementLowercase: 'Хотя бы одна строчная буква',
+    requirementNumber: 'Х��тя бы одна цифра',
+    changePassword: 'Изменить пароль',
+    success: 'Пароль успешно изменен',
+    error: 'Не удалось изменить пароль'
   },
 
   // API Documentation
@@ -190,5 +251,18 @@ export const ru: TranslationKeys = {
     implementationGuidelines: 'Руководство по Реализации',
     generalRequirements: 'Общие Требования',
     securityPerformance: 'Безопасность и Производительность',
+  },
+
+  // Sprints
+  sprints: {
+    manageAndReview: 'Управляйте и просматривайте ваши проектные спринты',
+    allSprints: 'Все спринты',
+    selectSprint: 'Выберите спринт',
+    chooseSprint: 'Выберите спринт из списка, чтобы просмотреть его задачи и детали',
+    active: 'Активный',
+    activeSprint: 'Активный спринт',
+    editSprint: 'Редактировать Спринт',
+    sprintName: 'Название Спринта',
+    sprintGoal: 'Цель Спринта',
   },
 };

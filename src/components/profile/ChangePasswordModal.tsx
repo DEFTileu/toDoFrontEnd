@@ -43,11 +43,11 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
   const handleFormSubmit = async (data: ChangePasswordData) => {
     try {
       await changePassword(data.currentPassword, data.newPassword);
-      showToast('Password changed successfully!', 'success');
+      showToast(t('passwordChange.success'), 'success');
       reset();
       onClose();
     } catch (error) {
-      showToast((error as Error).message || 'Failed to change password', 'error');
+      showToast((error as Error).message || t('passwordChange.error'), 'error');
     }
   };
 
@@ -60,7 +60,7 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={handleClose}
-      title="Change Password"
+      title={t('passwordChange.title')}
       size="md"
     >
       <div className="space-y-6">
@@ -70,7 +70,7 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
             <Shield className="w-8 h-8 text-indigo-600" />
           </div>
           <p className="text-gray-600">
-            Enter your current password and choose a new secure password
+            {t('passwordChange.description')}
           </p>
         </div>
 
@@ -79,12 +79,12 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
           <div className="relative">
             <Input
               type={showCurrentPassword ? 'text' : 'password'}
-              label="Current Password"
+              label={t('passwordChange.currentPassword')}
               {...register('currentPassword', {
-                required: 'Current password is required'
+                required: t('passwordChange.currentPasswordRequired')
               })}
               error={errors.currentPassword?.message}
-              placeholder="Enter your current password"
+              placeholder={t('passwordChange.currentPasswordPlaceholder')}
               autoComplete="current-password"
             />
             <button
@@ -101,20 +101,20 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
           <div className="relative">
             <Input
               type={showNewPassword ? 'text' : 'password'}
-              label="New Password"
+              label={t('passwordChange.newPassword')}
               {...register('newPassword', {
-                required: 'New password is required',
+                required: t('passwordChange.newPasswordRequired'),
                 minLength: {
                   value: 8,
-                  message: 'Password must be at least 8 characters'
+                  message: t('passwordChange.passwordMinLength')
                 },
                 pattern: {
                   value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-                  message: 'Password must contain at least one uppercase letter, one lowercase letter, and one number'
+                  message: t('passwordChange.passwordPattern')
                 }
               })}
               error={errors.newPassword?.message}
-              placeholder="Enter your new password"
+              placeholder={t('passwordChange.newPasswordPlaceholder')}
               autoComplete="new-password"
             />
             <button
@@ -131,14 +131,14 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
           <div className="relative">
             <Input
               type={showConfirmPassword ? 'text' : 'password'}
-              label="Confirm New Password"
+              label={t('passwordChange.confirmPassword')}
               {...register('confirmPassword', {
-                required: 'Please confirm your new password',
+                required: t('passwordChange.confirmPasswordRequired'),
                 validate: value =>
-                  value === newPassword || 'Passwords do not match'
+                  value === newPassword || t('passwordChange.passwordsDoNotMatch')
               })}
               error={errors.confirmPassword?.message}
-              placeholder="Confirm your new password"
+              placeholder={t('passwordChange.confirmPasswordPlaceholder')}
               autoComplete="new-password"
             />
             <button
@@ -155,13 +155,13 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <h4 className="text-sm font-medium text-blue-900 mb-2 flex items-center">
               <Lock className="w-4 h-4 mr-2" />
-              Password Requirements
+              {t('passwordChange.passwordRequirements')}
             </h4>
             <ul className="text-xs text-blue-700 space-y-1">
-              <li>• At least 8 characters long</li>
-              <li>• Contains at least one uppercase letter</li>
-              <li>• Contains at least one lowercase letter</li>
-              <li>• Contains at least one number</li>
+              <li>• {t('passwordChange.requirementMinLength')}</li>
+              <li>• {t('passwordChange.requirementUppercase')}</li>
+              <li>• {t('passwordChange.requirementLowercase')}</li>
+              <li>• {t('passwordChange.requirementNumber')}</li>
             </ul>
           </div>
 
@@ -173,7 +173,7 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
               onClick={handleClose}
               disabled={isSubmitting}
             >
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button
               type="submit"
@@ -181,7 +181,7 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
               disabled={isSubmitting}
               className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
             >
-              Change Password
+              {t('passwordChange.changePassword')}
             </Button>
           </div>
         </form>

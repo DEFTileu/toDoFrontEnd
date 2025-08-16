@@ -33,7 +33,7 @@ export const kz: TranslationKeys = {
     alreadyHaveAccount: 'Аккаунтыңыз бар ма?',
     demoCredentials: 'Демо деректер:',
     email: 'Email:',
-    
+
     // Validation messages
     emailRequired: 'Email міндетті',
     invalidEmail: 'Жарамсыз email мекенжайы',
@@ -44,15 +44,51 @@ export const kz: TranslationKeys = {
     confirmPasswordRequired: 'Құпия сөзді растаңыз',
     passwordsNotMatch: 'Құпия сөздер сәйкес келмейді',
 
-    // Email verification
-    emailVerification: 'Email растау',
-    verifyYourEmail: 'Email мекенжайыңызды растаңыз',
-    verificationEmailSent: 'Біз растау хабарламасын жібердік:',
-    checkEmailInstructions: 'Поштаңызды тексеріп, аккаунтыңызды белсендіру үшін хабарламадағы сілтемені басыңыз.',
-    continueToApp: 'Қолданбаға жалғастыру',
-    didntReceiveEmail: 'Хабарлама алмадыңыз ба?',
-    resendEmail: 'Қайта жіберу',
+
+    emailVerification: {
+      emailVerification: 'Электрондық поштаны растау',
+      verifyYourEmail: 'Электрондық поштаңызды растаңыз',
+      verificationEmailSent: 'Растау хаты келесі мекенжайға жіберілді:',
+      checkEmailInstructions: 'Поштаңызды тексеріп, тіркелгіні белсендіру үшін сілтемеге өтіңіз.',
+      continueToApp: 'Қолданбаға өту',
+      didntReceiveEmail: 'Хат келмеді ме?',
+      resendEmail: 'Қайта жіберу',
+
+      // Новое
+      title: 'Электрондық поштаны растаңыз',
+      subtitle: 'Электрондық поштаңызды тексеріңіз',
+      message: 'Растау коды жіберілді',
+      inputLabel: 'Растау коды',
+      inputPlaceholder: '6 таңбалы кодты енгізіңіз',
+      inputError: {
+        required: 'Растау коды міндетті',
+        invalid: 'Дұрыс 6 таңбалы код енгізіңіз',
+      },
+      resendPrompt: 'Код келмеді ме?',
+      resendButton: 'Қайта жіберу',
+      resendCountdown: '{{count}}с ішінде қайта жіберу',
+      cancel: 'Бас тарту',
+      verify: 'Поштаны растау',
+      success: 'Пошта сәтті расталды!',
+      failed: 'Растау сәтсіз аяқталды',
+      resendSuccess: 'Растау коды жіберілді!',
+      resendFailed: 'Кодты қайта жіберу мүмкін болмады',
+      securityNoteTitle: 'Қауіпсіздік ескертуі:',
+      securityNote: 'Растау коды 10 минут ішінде жарамсыз болады. Егер хатты көрмесеңіз, спам қалтасын тексеріңіз.',
+      checkEmail: 'Электрондық поштаңызды тексеріңіз',
+      sentCode: 'Растау коды жіберілді:',
+      verificationCode: 'Растау Коды',
+      codeRequired: 'Растау кодын енгізіңіз',
+      invalidCode: 'Қате код форматы',
+      codePlaceholder: '6 таңбалы кодты енгізіңіз',
+      didNotReceive: 'Кодты алмадыңыз ба?',
+      resendIn: 'Қайта жіберу {{count}}с ішінде',
+      resendCode: 'Кодты қайта жіберу',
+      verifyEmail: 'Растау',
+      codeSent: 'Растау коды жіберілді!',
+    }
   },
+
 
   // Tasks
   tasks: {
@@ -72,24 +108,24 @@ export const kz: TranslationKeys = {
     createTask: 'Тапсырма Жасау',
     updateTask: 'Тапсырманы Жаңарту',
     saveChanges: 'Өзгерістерді Сақтау',
-    
+
     // Task statuses
     todo: 'Орындауға',
     inProgress: 'Орындалуда',
     done: 'Орындалды',
-    
+
     // Task actions
     editTaskAction: 'Тапсырманы өңдеу',
     deleteTask: 'Тапсырманы жою',
     confirmDelete: 'Бұл тапсырманы жойғыңыз келетініне сенімдісіз бе?',
-    
+
     // Task stats
     noTasksYet: 'Әлі тапсырмалар жоқ',
     tasksWaitingToStart: 'Басталуын күтіп жатқан тапсырмалар',
     currentlyWorkingOn: 'Қазір жұмыс істеп жатыр',
     successfullyFinished: 'Сәтті аяқталды',
     dropTasksHere: 'Тапсырмаларды осында тастаңыз',
-    
+
     // Messages
     taskCreatedSuccess: 'Тапсырма сәтті жасалды!',
     taskUpdatedSuccess: 'Тапсырма сәтті жаңартылды',
@@ -99,7 +135,7 @@ export const kz: TranslationKeys = {
     failedToUpdateTask: 'Тапсырманы жаңарту сәтсіз аяқталды',
     failedToDeleteTask: 'Тапсырманы жою сәтсіз аяқталды',
     failedToUpdateStatus: 'Тапсырма күйін жаңарту сәтсіз аяқталды',
-    
+
     // Validation
     titleRequired: 'Атауы міндетті',
     titleMinLength: 'Атауы кемінде 3 таңбадан тұруы керек',
@@ -135,13 +171,13 @@ export const kz: TranslationKeys = {
     notifications: 'Хабарландырулар',
     emailNotifications: 'Email хабарландырулары',
     taskReminders: 'Тапсырма еске салғыштары',
-    
+
     // Avatar upload
     uploadAvatar: 'Жүктеу',
     cancelUpload: 'Болдырмау',
     changeAvatar: 'Аватарды Өзгерту',
     supportedFormats: 'Қолдау көрсетілетін форматтар: JPG, PNG, GIF. Макс. өлшемі: 5МБ',
-    
+
     // Messages
     profileUpdatedSuccess: 'Профиль сәтті жаңартылды!',
     avatarUpdatedSuccess: 'Аватар сәтті жаңартылды!',
@@ -158,7 +194,9 @@ export const kz: TranslationKeys = {
     errorLoadingTasks: 'Тапсырмаларды Жүктеу Қатесі',
     welcomeMessage: 'Қайта келуіңізбен!',
     accountCreatedSuccess: 'Аккаунт сәтті жасалды!',
-    
+    cancel: 'Бас тарту',
+    save: 'Сақтау',
+
     // Time formats
     today: 'Бүгін',
     yesterday: 'Кеше',
@@ -166,13 +204,38 @@ export const kz: TranslationKeys = {
     yesterdayAt: 'Кеше',
     dueToday: 'Бүгін мерзімі',
     overdue: 'Мерзімі өткен',
-    
+
     // Buttons
     showPassword: 'Құпия сөзді көрсету',
     hidePassword: 'Құпия сөзді жасыру',
     closeModal: 'Модальды жабу',
-    closeNotification: 'Хабарландыруды жабу',
-    cancel: 'Болдырмау',
+    closeNotification: 'Хабарландыруды жабу'
+  },
+
+  // Password Change
+  passwordChange: {
+    title: 'Құпия сөзді өзгерту',
+    description: 'Құпия сөзді өзгерту үшін ағымдағы құпия сөзді және жаңа құпия сөзді енгізіңіз.',
+    currentPassword: 'Ағымдағы құпия сөз',
+    newPassword: 'Жаңа құпия сөз',
+    confirmPassword: 'Жаңа құпия сөзді растау',
+    currentPasswordRequired: 'Ағымдағы құпия сөзді енгізіңіз',
+    newPasswordRequired: 'Жаңа құпия сөзді енгізіңіз',
+    confirmPasswordRequired: 'Жаңа құпия сөзді растаңыз',
+    passwordMinLength: 'Құпия сөз кемінде 8 таңбадан тұруы керек',
+    passwordPattern: 'Құпия сөзде бас әріптер, кіші әріптер және сандар болуы керек',
+    passwordsDoNotMatch: 'Құпия сөздер сәйкес келмейді',
+    currentPasswordPlaceholder: 'Ағымдағы құпия сөзді енгізіңіз',
+    newPasswordPlaceholder: 'Жаңа құпия сөзді енгізіңіз',
+    confirmPasswordPlaceholder: 'Жаңа құпия сөзді растаңыз',
+    passwordRequirements: 'Құпия сөзге қойылатын талаптар',
+    requirementMinLength: 'Кемінде 8 таңба',
+    requirementUppercase: 'Кемінде бір бас әріп',
+    requirementLowercase: 'Кемінде бір кіші әріп',
+    requirementNumber: 'Кемінде бір сан',
+    changePassword: 'Құпия сөзді өзгерту',
+    success: 'Құпия сөз сәтті өзгертілді',
+    error: 'Құпия сөзді өзгерту сәтсіз аяқталды'
   },
 
   // API Documentation
@@ -190,5 +253,18 @@ export const kz: TranslationKeys = {
     implementationGuidelines: 'Іске Асыру Нұсқаулары',
     generalRequirements: 'Жалпы Талаптар',
     securityPerformance: 'Қауіпсіздік пен Өнімділік',
+  },
+
+  // Sprints
+  sprints: {
+    manageAndReview: 'Жобалық спринттеріңізді басқарыңыз және қараңыз',
+    allSprints: 'Барлық спринттер',
+    selectSprint: 'Спринтті таңдаңыз',
+    chooseSprint: 'Тапсырмалары мен мәліметтерін көру үшін тізімнен спринтті таңдаңыз',
+    active: 'Белсенді',
+    activeSprint: 'Белсенді спринт',
+    editSprint: 'Спринтті Өңдеу',
+    sprintName: 'Спринт Атауы',
+    sprintGoal: 'Спринт Мақсаты',
   },
 };

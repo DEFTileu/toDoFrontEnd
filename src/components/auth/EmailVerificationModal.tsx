@@ -6,8 +6,9 @@ import { useToast } from '../../contexts/ToastContext';
 import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
 import { Input } from '../common/Input';
-import {API_CONFIG, API_ENDPOINTS, createRequestConfig, fetchWithTimeout} from "../../services/apiConfig.ts"; // keep for backward compatibility
 import { useAuth } from '../../contexts/AuthContext';
+
+
 
 interface EmailVerificationModalProps {
   isOpen: boolean;
@@ -21,11 +22,11 @@ interface VerificationData {
 }
 
 export const EmailVerificationModal: React.FC<EmailVerificationModalProps> = ({
-                                                                                isOpen,
-                                                                                onClose,
-                                                                                email,
-                                                                                onVerificationSuccess
-                                                                              }) => {
+  isOpen,
+  onClose,
+  email,
+  onVerificationSuccess
+}) => {
   const [isResending, setIsResending] = useState(false);
   const [countdown, setCountdown] = useState(0);
   const { t } = useTranslation();
@@ -41,7 +42,7 @@ export const EmailVerificationModal: React.FC<EmailVerificationModalProps> = ({
 
   // Countdown timer for resend button
   useEffect(() => {
-    let timer: NodeJS.Timeout;
+    let timer: ReturnType<typeof setTimeout>;
     if (countdown > 0) {
       timer = setTimeout(() => setCountdown(countdown - 1), 1000);
     }
@@ -59,11 +60,11 @@ export const EmailVerificationModal: React.FC<EmailVerificationModalProps> = ({
     try {
       // Use AuthContext to verify email which stores tokens and user info
       await verifyEmail(email, data.verificationCode);
-      showToast('Email verified successfully!', 'success');
+      showToast(t('emailVerification.success'), 'success');
       reset();
       onVerificationSuccess();
     } catch (error) {
-      showToast((error as Error).message || 'Verification failed', 'error');
+      showToast((error as Error).message || t('emailVerification.failed'), 'error');
     }
   };
 
@@ -73,10 +74,10 @@ export const EmailVerificationModal: React.FC<EmailVerificationModalProps> = ({
     try {
       // Use AuthContext to resend verification code
       await resendVerification(email);
-      showToast('Verification code sent!', 'success');
+      showToast(t('emailVerification.codeSent'), 'success');
       setCountdown(60); // Reset countdown
     } catch (error) {
-      showToast((error as Error).message || 'Failed to resend code', 'error');
+      showToast((error as Error).message || t('emailVerification.resendFailed'), 'error');
     } finally {
       setIsResending(false);
     }
@@ -91,7 +92,7 @@ export const EmailVerificationModal: React.FC<EmailVerificationModalProps> = ({
       <Modal
           isOpen={isOpen}
           onClose={handleClose}
-          title="Verify Your Email"
+          title={t('emailVerification.title')}
           size="md"
       >
         <div className="space-y-6">
@@ -101,10 +102,10 @@ export const EmailVerificationModal: React.FC<EmailVerificationModalProps> = ({
               <Mail className="w-8 h-8 text-blue-600" />
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              Check Your Email
+              {t('emailVerification.checkEmail')}
             </h3>
             <p className="text-gray-600">
-              We've sent a verification code to
+              {t('emailVerification.sentCode')}
             </p>
             <p className="text-indigo-600 font-medium">{email}</p>
           </div>
@@ -114,16 +115,16 @@ export const EmailVerificationModal: React.FC<EmailVerificationModalProps> = ({
             <div>
               <Input
                   type="text"
-                  label="Verification Code"
+                  label={t('emailVerification.verificationCode')}
                   {...register('verificationCode', {
-                    required: 'Verification code is required',
+                    required: t('emailVerification.codeRequired'),
                     pattern: {
                       value: /^\d{6}$/,
-                      message: 'Please enter a valid 6-digit code'
+                      message: t('emailVerification.invalidCode')
                     }
                   })}
                   error={errors.verificationCode?.message}
-                  placeholder="Enter 6-digit code"
+                  placeholder={t('emailVerification.codePlaceholder')}
                   maxLength={6}
                   className="text-center text-lg font-mono tracking-widest"
                   autoComplete="one-time-code"
@@ -133,7 +134,7 @@ export const EmailVerificationModal: React.FC<EmailVerificationModalProps> = ({
             {/* Resend Code */}
             <div className="text-center">
               <p className="text-sm text-gray-600 mb-3">
-                Didn't receive the code?
+                {t('emailVerification.didNotReceive')}
               </p>
               <Button
                   type="button"
@@ -144,7 +145,7 @@ export const EmailVerificationModal: React.FC<EmailVerificationModalProps> = ({
                   size="sm"
               >
                 <RefreshCw className="w-4 h-4 mr-2" />
-                {countdown > 0 ? `Resend in ${countdown}s` : 'Resend Code'}
+                {countdown > 0 ? t('emailVerification.resendIn') : t('emailVerification.resendCode')}
               </Button>
             </div>
 
@@ -156,7 +157,7 @@ export const EmailVerificationModal: React.FC<EmailVerificationModalProps> = ({
                   onClick={handleClose}
                   disabled={isSubmitting}
               >
-                Cancel
+                {t('common.cancel')}
               </Button>
               <Button
                   type="submit"
@@ -165,7 +166,7 @@ export const EmailVerificationModal: React.FC<EmailVerificationModalProps> = ({
                   className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
               >
                 <CheckCircle className="w-4 h-4 mr-2" />
-                Verify Email
+                {t('emailVerification.verifyEmail')}
               </Button>
             </div>
           </form>
@@ -175,10 +176,9 @@ export const EmailVerificationModal: React.FC<EmailVerificationModalProps> = ({
             <div className="flex items-start space-x-3">
               <Shield className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
               <div className="text-sm text-gray-600">
-                <p className="font-medium mb-1">Security Note:</p>
+                <p className="font-medium mb-1">{t('emailVerification.securityNoteTitle')}</p>
                 <p>
-                  The verification code will expire in 10 minutes.
-                  If you don't see the email, check your spam folder.
+                  {t('emailVerification.securityNote')}
                 </p>
               </div>
             </div>

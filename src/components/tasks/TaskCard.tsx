@@ -70,9 +70,9 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, index, onTaskClick }) 
 
           {/* Task Description */}
           {task.description && (
-            <p className="text-xs sm:text-sm text-gray-600 mb-3 leading-relaxed">
-              {truncateText(task.description, 100)}
-            </p>
+              <p className="text-xs sm:text-sm text-gray-600 mb-3 leading-relaxed break-words line-clamp-2">
+                {truncateText(task.description, 100)}
+              </p>
           )}
 
           {/* Task Footer */}
