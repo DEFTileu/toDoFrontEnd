@@ -149,7 +149,8 @@ class AuthService {
       await fetchWithAuth(
         `${API_CONFIG.BASE_URL}${API_ENDPOINTS.LOGOUT}`,
         {
-          method: 'POST'
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
         }
       );
     } catch (error) {
@@ -168,7 +169,8 @@ class AuthService {
       `${API_CONFIG.BASE_URL}${API_ENDPOINTS.UPDATE_PROFILE}`,
       {
         method: 'PUT',
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' },
       }
     );
 
@@ -222,8 +224,10 @@ class AuthService {
         body: JSON.stringify({
           currentPassword,
           newPassword
-        })
+        }),
+        headers: { 'Content-Type': 'application/json' },
       }
+
     );
 
     const data = await response.json();

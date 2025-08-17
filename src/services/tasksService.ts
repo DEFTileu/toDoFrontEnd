@@ -62,7 +62,9 @@ export const tasksService = {
     try {
       const response = await fetchWithAuth(
         `${API_CONFIG.BASE_URL}${API_ENDPOINTS.TASK_BY_ID(id)}`,
-        { method: 'GET' }
+
+        { method: 'GET',
+          headers: { 'Content-Type': 'application/json' },}
       );
 
       const data = await handleApiResponse(response);
@@ -104,6 +106,7 @@ export const tasksService = {
         `${API_CONFIG.BASE_URL}${API_ENDPOINTS.TASK_BY_ID(id)}`,
         {
           method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(updateData),
         }
       );
@@ -122,6 +125,7 @@ export const tasksService = {
         `${API_CONFIG.BASE_URL}${API_ENDPOINTS.TASK_BY_ID(id)}`,
         {
           method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
         }
       );
 
@@ -139,6 +143,7 @@ export const tasksService = {
         `${API_CONFIG.BASE_URL}${API_ENDPOINTS.TASK_STATUS(id)}`,
         {
           method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ status }),
         }
       );
@@ -158,6 +163,7 @@ export const tasksService = {
         `${API_CONFIG.BASE_URL}${API_ENDPOINTS.TASK_COMMENTS(taskId)}`,
         {
           method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ content }),
         }
       );
@@ -176,7 +182,8 @@ export const tasksService = {
     try {
       const response = await fetchWithAuth(
         `${API_CONFIG.BASE_URL}${API_ENDPOINTS.SPRINTS}`,
-        { method: 'GET' }
+        { method: 'GET',
+          headers: { 'Content-Type': 'application/json' },}
       );
 
       const data = await handleApiResponse(response);
@@ -192,7 +199,8 @@ export const tasksService = {
     try {
       const response = await fetchWithAuth(
         `${API_CONFIG.BASE_URL}${API_ENDPOINTS.SPRINT_TASKS(sprintId)}`,
-        { method: 'GET' }
+        { method: 'GET',
+          headers: { 'Content-Type': 'application/json' },}
       );
 
       const data = await handleApiResponse(response);
@@ -208,7 +216,8 @@ export const tasksService = {
     try {
       const response = await fetchWithAuth(
         `${API_CONFIG.BASE_URL}${API_ENDPOINTS.ACTIVE_SPRINT}`,
-        { method: 'GET' }
+        { method: 'GET',
+          headers: { 'Content-Type': 'application/json' },}
       );
 
       const data = await handleApiResponse(response);

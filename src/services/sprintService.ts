@@ -43,7 +43,8 @@ export const sprintService = {
     try {
       const response = await fetchWithAuth(
         `${API_CONFIG.BASE_URL}/sprints`,
-        { method: 'GET' }
+        { method: 'GET',
+          headers: { 'Content-Type': 'application/json' },}
       );
       return await handleApiResponse(response);
     } catch (error) {
@@ -56,7 +57,8 @@ export const sprintService = {
     try {
       const response = await fetchWithAuth(
         `${API_CONFIG.BASE_URL}/sprints/${sprintId}/tasks`,
-        { method: 'GET' }
+        { method: 'GET',
+          headers: { 'Content-Type': 'application/json' },}
       );
       return await handleApiResponse(response);
     } catch (error) {
