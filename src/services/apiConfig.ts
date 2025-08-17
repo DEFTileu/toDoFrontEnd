@@ -57,7 +57,10 @@ export const ERROR_MESSAGES = {
   TIMEOUT: 'Превышено время ожидания ответа от сервера',
   UNAUTHORIZED: 'Необходима авторизация',
   FORBIDDEN: 'Доступ запрещен',
-  REGISTRATION_FAILED: 'Регистрация не удалась, попробуйте позже'
+  REGISTRATION_FAILED: 'Регистрация не удалась, попробуйте позже',
+    VALIDATION_ERROR: 'Ошибка валидации данных',
+    NOT_FOUND: 'Запрашиваемый ресурс не найден',
+    CONFLICT: 'Конфликт данных, возможно, такой ресурс уже существует',
 } as const;
 
 // Request configuration

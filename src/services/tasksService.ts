@@ -45,7 +45,9 @@ export const tasksService = {
     try {
       const response = await fetchWithAuth(
         `${API_CONFIG.BASE_URL}${API_ENDPOINTS.TASKS}`,
-        { method: 'GET' }
+
+        { method: 'GET',
+          headers: { 'Content-Type': 'application/json' }}
       );
 
       const data = await handleApiResponse(response);
@@ -81,6 +83,7 @@ export const tasksService = {
         `${API_CONFIG.BASE_URL}${API_ENDPOINTS.TASKS}`,
         {
           method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(taskData),
         }
       );

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, ReactNode, useCallback } from 'react';
-import { Task, TasksState, CreateTaskData, UpdateTaskData, TaskComment, TaskPreview } from '../types';
+import { Task, TasksState, CreateTaskData, UpdateTaskData, TaskPreview } from '../types';
 import { tasksService } from '../services/tasksService';
 
 interface TasksContextType extends TasksState {
