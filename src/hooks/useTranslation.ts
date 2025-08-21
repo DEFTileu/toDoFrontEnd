@@ -12,7 +12,7 @@ const translations = {
 export const useTranslation = () => {
   const { language } = useLanguage();
   
-  const t = (key: string): string => {
+  const t = (key: string) => {
     const keys = key.split('.');
     let value: any = translations[language];
     

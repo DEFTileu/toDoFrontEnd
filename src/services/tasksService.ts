@@ -69,7 +69,7 @@ export const tasksService = {
 
       const data = await handleApiResponse(response);
       return {
-        task: data.task || data,
+        task: data.task || data, 
         sprint: data.sprint
       };
     } catch (error) {

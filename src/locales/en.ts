@@ -138,6 +138,42 @@ export const en = {
     titleMinLength: 'Title must be at least 3 characters',
     titleMaxLength: 'Title must be less than 100 characters',
     descriptionMaxLength: 'Description must be less than 500 characters',
+
+    // Preview modal additions
+    loadingDetails: 'Loading task details...',
+    createdLabel: 'Created',
+    lastUpdated: 'Last Updated',
+    edit: 'Edit',
+    delete: 'Delete',
+    descriptionSection: 'Description',
+    doubleClickToEdit: 'Double-click to edit',
+    clickTwiceToShow: 'Click twice to show description',
+    clickTwiceToShowComments: 'Click twice to show comments',
+    statusUpdatedSuccess: 'Status updated successfully!',
+    descriptionUpdatedSuccess: 'Description updated successfully!',
+    failedToLoadDetails: 'Failed to load task details',
+    failedToUpdateDescription: 'Failed to update description',
+    notFound: 'Task not found',
+    notFoundMessage: 'The requested task could not be loaded.',
+    properties: 'Properties',
+    sprint: 'Sprint',
+    active: 'Active',
+    completed: 'Completed',
+  },
+
+  // Comments
+  comments: {
+    noComments: 'No comments yet. Be the first to add one!',
+    writePlaceholder: 'Write a comment...',
+    post: 'Post Comment',
+    addSuccess: 'Comment added successfully',
+    addError: 'Failed to add comment',
+    title: 'Comments',
+    addLabel: 'Add a comment',
+    placeholderRich: 'Write your comment here... You can use **bold**, *italic*, and lists!',
+    formattingTips: 'Formatting tips:',
+    formattingExamples: 'Use **bold**, *italic*, - bullet lists, 1. numbered lists',
+    count: '{{count}} comments',
   },
 
   // Profile

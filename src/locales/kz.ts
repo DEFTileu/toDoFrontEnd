@@ -141,6 +141,42 @@ export const kz: TranslationKeys = {
     titleMinLength: 'Атауы кемінде 3 таңбадан тұруы керек',
     titleMaxLength: 'Атауы 100 таңбадан аз болуы керек',
     descriptionMaxLength: 'Сипаттама 500 таңбадан аз болуы керек',
+
+    // Preview modal additions
+    loadingDetails: 'Тапсырма деректері жүктелуде...',
+    createdLabel: 'Жасалған',
+    lastUpdated: 'Соңғы жаңарту',
+    edit: 'Өңдеу',
+    delete: 'Жою',
+    descriptionSection: 'Сипаттама',
+    doubleClickToEdit: 'Өңдеу үшін екі рет шертіңіз',
+    clickTwiceToShow: 'Сипаттаманы көрсету үшін екі рет басыңыз',
+    clickTwiceToShowComments: 'Пікірлерді көрсету үшін екі рет басыңыз',
+    statusUpdatedSuccess: 'Күйі сәтті жаңартылды!',
+    descriptionUpdatedSuccess: 'Сипаттама сәтті жаңартылды!',
+    failedToLoadDetails: 'Тапсырма деректерін жүктеу сәтсіз аяқталды',
+    failedToUpdateDescription: 'Сипаттаманы жаңарту мүмкін болмады',
+    notFound: 'Тапсырма табылмады',
+    notFoundMessage: 'Сұралған тапсырманы жүктеу мүмкін болмады.',
+    properties: 'Қасиеттер',
+    sprint: 'Спринт',
+    active: 'Белсенді',
+    completed: 'Аяқталған',
+  },
+
+  // Comments
+  comments: {
+    noComments: 'Әзірге пікірлер жоқ. Бірінші пікір қалдырыңыз!',
+    writePlaceholder: 'Пікір жазыңыз...',
+    post: 'Жіберу',
+    addSuccess: 'Пікір сәтті қосылды',
+    addError: 'Пікір қосу сәтсіз аяқталды',
+    title: 'Пікірлер',
+    addLabel: 'Пікір қосу',
+    placeholderRich: 'Пікір жазыңыз... **қалың**, *курсив* және тізімдерді қолдануға болады!',
+    formattingTips: 'Пішімдеу кеңестері:',
+    formattingExamples: '**қалың**, *курсив*, - маркерлі тізім, 1. нөмірленген тізім',
+    count: '{{count}} пікір',
   },
 
   // Profile

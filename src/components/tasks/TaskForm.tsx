@@ -4,7 +4,7 @@ import { useTranslation } from '../../hooks/useTranslation';
 import { CreateTaskData } from '../../types';
 import { Button } from '../common/Button';
 import { Input } from '../common/Input';
-import { Textarea } from '../common/Textarea';
+import RichTextEditor from '../common/RichTextEditor';
 
 interface TaskFormProps {
   initialData?: Partial<CreateTaskData>;
@@ -25,6 +25,7 @@ export const TaskForm: React.FC<TaskFormProps> = ({
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors, isSubmitting }
   } = useForm<CreateTaskData>({
     defaultValues: {
@@ -36,11 +37,8 @@ export const TaskForm: React.FC<TaskFormProps> = ({
   });
   const { t } = useTranslation();
 
-  const watchedStatus = watch('status');
-
   const handleFormSubmit = async (data: CreateTaskData) => {
     try {
-      // Convert date to ISO string if provided
       const formattedData = {
         ...data,
         deadline: data.deadline ? new Date(data.deadline).toISOString() : undefined,
@@ -52,7 +50,7 @@ export const TaskForm: React.FC<TaskFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-8">
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6 max-w-3xl mx-auto">
       {/* Title Field */}
       <div className="space-y-2">
         <Input
@@ -70,40 +68,31 @@ export const TaskForm: React.FC<TaskFormProps> = ({
           })}
           error={errors.title?.message}
           placeholder={t('tasks.enterTaskTitle')}
-          className="text-lg font-medium"
+          className="text-lg font-medium w-full"
         />
       </div>
 
       {/* Description Field */}
       <div className="space-y-2">
-        <Textarea
-          label={t('tasks.description')}
-          {...register('description', {
-            maxLength: {
-              value: 500,
-              message: t('tasks.descriptionMaxLength')
-            }
-          })}
-          error={errors.description?.message}
-          placeholder={t('tasks.enterTaskDescription')}
-          rows={4}
-          className="resize-none"
-        />
-      </div>
-
-      {/* Deadline and Status Row */}
-      <div className="grid gap-6 md:grid-cols-2">
-        <div className="space-y-2">
-          <Input
-            type="date"
-            label={t('tasks.deadline')}
-            {...register('deadline')}
-            error={errors.deadline?.message}
-            min={new Date().toISOString().split('T')[0]}
-            className="cursor-pointer"
+        <label className="block text-sm font-medium text-gray-700">
+          {t('tasks.description')}
+        </label>
+        <div className="min-h-[300px]">
+          <RichTextEditor
+            content={watch('description') || ''}
+            onChange={(content) => setValue('description', content)}
+            placeholder={t('tasks.enterTaskDescription')}
+            minHeight="250px"
+            className="border-gray-300 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500"
           />
         </div>
+        {errors.description?.message && (
+          <p className="text-sm text-red-600 mt-1">{errors.description.message}</p>
+        )}
+      </div>
 
+      {/* Status and Deadline Row */}
+      <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <label htmlFor="status" className="block text-sm font-medium text-gray-700">
             {t('tasks.status')}
@@ -111,31 +100,42 @@ export const TaskForm: React.FC<TaskFormProps> = ({
           <select
             id="status"
             {...register('status')}
-            className="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900 font-medium transition-all duration-200 hover:border-gray-400"
+            className="block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900 font-medium transition-all duration-200 hover:border-gray-400"
           >
             <option value="todo">{t('tasks.todo')}</option>
             <option value="in-progress">{t('tasks.inProgress')}</option>
             <option value="done">{t('tasks.done')}</option>
           </select>
         </div>
+
+        <div className="space-y-2">
+          <Input
+            type="date"
+            label={t('tasks.deadline')}
+            {...register('deadline')}
+            error={errors.deadline?.message}
+            min={new Date().toISOString().split('T')[0]}
+            className="w-full cursor-pointer"
+          />
+        </div>
       </div>
 
       {/* Action Buttons */}
-      <div className="flex items-center justify-end space-x-4 pt-8 border-t border-gray-100">
+      <div className="flex items-center justify-end space-x-4 pt-6 border-t border-gray-100">
         <Button
           type="button"
           variant="secondary"
           onClick={onCancel}
           disabled={isSubmitting || isLoading}
-          className="px-8 py-3"
+          className="px-6 py-2.5"
         >
-          {t('tasks.cancel')}
+          {t('common.cancel')}
         </Button>
         <Button
           type="submit"
           loading={isSubmitting || isLoading}
           disabled={isSubmitting || isLoading}
-          className="px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+          className="px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
         >
           {submitLabel}
         </Button>

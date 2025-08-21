@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Send, User, MessageSquare } from 'lucide-react';
+import { Send, MessageSquare } from 'lucide-react';
 import { useTasks } from '../../contexts/TasksContext';
 import { useToast } from '../../contexts/ToastContext';
 import { useTranslation } from '../../hooks/useTranslation';
 import { Task } from '../../types';
 import { Button } from '../common/Button';
+import RichTextEditor from '../common/RichTextEditor';
 import { formatDate, getInitials } from '../../utils/formatters';
 
 interface TaskCommentsProps {
@@ -27,9 +28,9 @@ export const TaskComments: React.FC<TaskCommentsProps> = ({ task }) => {
     try {
       await addComment(task.id, newComment.trim());
       setNewComment('');
-      showToast('Comment added successfully!', 'success');
+      showToast(t('comments.addSuccess'), 'success');
     } catch (error) {
-      showToast('Failed to add comment', 'error');
+      showToast(t('comments.addError'), 'error');
     } finally {
       setIsSubmitting(false);
     }
@@ -40,57 +41,84 @@ export const TaskComments: React.FC<TaskCommentsProps> = ({ task }) => {
       {/* Comments List */}
       <div className="space-y-4 max-h-96 overflow-y-auto">
         {(task.comments?.length ?? 0) === 0 ? (
-          <div className="text-center py-8 text-gray-500">
+          <div className="text-center py-8 text-gray-500 bg-gray-50 rounded-lg">
             <MessageSquare className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-            <p>No comments yet. Be the first to add one!</p>
+            <p>{t('comments.noComments')}</p>
           </div>
         ) : (
           task.comments.map((comment) => (
-            <div key={comment.id} className="flex space-x-3 p-4 bg-gray-50 rounded-lg">
+            <div key={comment.id} className="flex space-x-3 p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
               <div className="flex-shrink-0">
-                <div className="w-8 h-8 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
-                  {getInitials(comment.userName)}
+                {comment.user.avatar ? (
+                  <img
+                    src={comment.user.avatar}
+                    alt={comment.user.name}
+                    className="w-10 h-10 rounded-full object-cover ring-2 ring-indigo-100"
+                    onError={(e) => {
+                      // Fallback to initials if image fails to load
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                      const fallback = target.nextElementSibling as HTMLElement;
+                      if (fallback) fallback.style.display = 'flex';
+                    }}
+                  />
+                ) : null}
+                <div
+                  className={`w-10 h-10 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-medium ${comment.user.avatar ? 'hidden' : 'flex'}`}
+                >
+                  {getInitials(comment.user.name)}
                 </div>
               </div>
               <div className="flex-1 min-w-0">
-                <div className="flex items-center space-x-2 mb-1">
-                  <span className="text-sm font-medium text-gray-900">{comment.userName}</span>
-                  <span className="text-xs text-gray-500">{formatDate(comment.createdAt)}</span>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+                  <p className="text-sm font-semibold text-gray-900">
+                    {comment.user.name}
+                  </p>
+                  <span className="text-xs text-gray-500">
+                    {formatDate(comment.createdAt)}
+                  </span>
                 </div>
-                <p className="text-sm text-gray-700 leading-relaxed">{comment.content}</p>
+                {/* Правильное отображение HTML-контента с форматированием */}
+                <div
+                  className="prose prose-sm max-w-none text-gray-700 [&_p]:mb-2 [&_ul]:my-2 [&_ol]:my-2 [&_li]:mb-1 [&_strong]:font-semibold [&_em]:italic [&_blockquote]:border-l-4 [&_blockquote]:border-gray-300 [&_blockquote]:pl-4 [&_blockquote]:italic [&_h2]:text-lg [&_h2]:font-bold [&_h2]:mb-2 [&_a]:text-blue-600 [&_a]:underline hover:[&_a]:text-blue-800 [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded"
+                  dangerouslySetInnerHTML={{ __html: comment.content }}
+                />
               </div>
             </div>
           ))
         )}
       </div>
 
-      {/* Add Comment Form */}
+      {/* New Comment Form */}
       <form onSubmit={handleSubmitComment} className="border-t border-gray-200 pt-6">
         <div className="space-y-4">
           <div>
-            <label htmlFor="comment" className="block text-sm font-medium text-gray-700 mb-2">
-              Add a comment
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              {t('comments.addLabel')}
             </label>
-            <textarea
-              id="comment"
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              placeholder="Write your comment here..."
-              rows={3}
-              className="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none"
-              disabled={isSubmitting}
-            />
-          </div>
-          <div className="flex justify-end">
-            <Button
-              type="submit"
-              loading={isSubmitting}
-              disabled={isSubmitting || !newComment.trim()}
-              size="sm"
-            >
-              <Send className="w-4 h-4 mr-2" />
-              Add Comment
-            </Button>
+            <div className="border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm">
+              <RichTextEditor
+                content={newComment}
+                onChange={setNewComment}
+                placeholder={t('comments.placeholderRich')}
+                minHeight="120px"
+              />
+            </div>
+            <div className="mt-3 flex items-center justify-between">
+              <div className="text-xs text-gray-500">
+                <strong>{t('comments.formattingTips')}</strong> {t('comments.formattingExamples')}
+              </div>
+              <Button
+                type="submit"
+                disabled={!newComment.trim() || isSubmitting}
+                loading={isSubmitting}
+                size="sm"
+                className="inline-flex items-center"
+              >
+                <Send className="w-4 h-4 mr-2" />
+                {t('comments.post')}
+              </Button>
+            </div>
           </div>
         </div>
       </form>

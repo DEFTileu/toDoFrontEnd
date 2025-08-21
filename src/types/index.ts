@@ -17,6 +17,7 @@ export interface Task {
   deadline?: string;
   userId: string;
   comments: TaskComment[];
+  subtasks: String[];
   sprintId?: string;
 }
 

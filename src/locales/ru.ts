@@ -141,6 +141,42 @@ export const ru: TranslationKeys = {
     titleMinLength: 'Название должно содержать минимум 3 символа',
     titleMaxLength: 'Название должно содержать менее 100 символов',
     descriptionMaxLength: 'Описание должно содержать менее 500 символов',
+
+    // Preview modal additions
+    loadingDetails: 'Загрузка деталей задачи...',
+    createdLabel: 'Создано',
+    lastUpdated: 'Последнее обновление',
+    edit: 'Редактировать',
+    delete: 'Удалить',
+    descriptionSection: 'Описание',
+    doubleClickToEdit: 'Двойной клик для редактирования',
+    clickTwiceToShow: 'Нажмите дважды, чтобы показать описание',
+    clickTwiceToShowComments: 'Нажмите дважды, чтобы показать комментарии',
+    statusUpdatedSuccess: 'Статус успешно обновлен!',
+    descriptionUpdatedSuccess: 'Описание успешно обновлено!',
+    failedToLoadDetails: 'Не удалось загрузить детали задачи',
+    failedToUpdateDescription: 'Не удалось обновить описание',
+    notFound: 'Задача не найдена',
+    notFoundMessage: 'Запрошенная задача не может быть загружена.',
+    properties: 'Свойства',
+    sprint: 'Спринт',
+    active: 'Активный',
+    completed: 'Завершён',
+  },
+
+  // Comments
+  comments: {
+    noComments: 'Нет комментариев. Будьте первым, кто оставит комментарий!',
+    writePlaceholder: 'Напишите комментарий...',
+    post: 'Отправить',
+    addSuccess: 'Комментарий успешно добавлен',
+    addError: 'Не удалось добавить комментарий',
+    title: 'Комментарии',
+    addLabel: 'Добавить комментарий',
+    placeholderRich: 'Напишите ваш комментарий... Можно использовать **жирный**, *курсив* и списки!',
+    formattingTips: 'Подсказки форматирования:',
+    formattingExamples: 'Используйте **жирный**, *курсив*, - маркированные списки, 1. нумерованные списки',
+    count: '{{count}} комментариев',
   },
 
   // Profile
