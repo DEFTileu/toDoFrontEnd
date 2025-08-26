@@ -63,7 +63,7 @@ export const TaskComments: React.FC<TaskCommentsProps> = ({ task }) => {
                     }}
                   />
                 ) : null}
-                <div
+                <div 
                   className={`w-10 h-10 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-medium ${comment.user.avatar ? 'hidden' : 'flex'}`}
                 >
                   {getInitials(comment.user.name)}
@@ -79,9 +79,9 @@ export const TaskComments: React.FC<TaskCommentsProps> = ({ task }) => {
                   </span>
                 </div>
                 {/* Правильное отображение HTML-контента с форматированием */}
-                <div
+                <div 
                   className="prose prose-sm max-w-none text-gray-700 [&_p]:mb-2 [&_ul]:my-2 [&_ol]:my-2 [&_li]:mb-1 [&_strong]:font-semibold [&_em]:italic [&_blockquote]:border-l-4 [&_blockquote]:border-gray-300 [&_blockquote]:pl-4 [&_blockquote]:italic [&_h2]:text-lg [&_h2]:font-bold [&_h2]:mb-2 [&_a]:text-blue-600 [&_a]:underline hover:[&_a]:text-blue-800 [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded"
-                  dangerouslySetInnerHTML={{ __html: comment.content }}
+                  dangerouslySetInnerHTML={{ __html: comment.content }} 
                 />
               </div>
             </div>

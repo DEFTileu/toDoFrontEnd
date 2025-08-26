@@ -40,46 +40,51 @@ const t = (key: string): string => {
   return typeof value === 'string' ? value : key;
 };
 
-export const formatDate = (dateString: string): string => {
-  const date = parseISO(dateString);
-  
+export const formatDate = (dateString?: string): string => {
+  if(!dateString) return '';
+  let date: Date;
+  try { date = parseISO(dateString); } catch { return dateString; }
+  if (isNaN(date.getTime())) return dateString;
   if (isToday(date)) {
     return `${t('common.todayAt')} ${format(date, 'h:mm a')}`;
   }
-  
   if (isYesterday(date)) {
     return `${t('common.yesterdayAt')} ${format(date, 'h:mm a')}`;
   }
-  
   return format(date, 'MMM d, yyyy');
 };
 
-export const formatRelativeDate = (dateString: string): string => {
-  const date = parseISO(dateString);
+export const formatRelativeDate = (dateString?: string): string => {
+  if(!dateString) return '';
+  let date: Date; try { date = parseISO(dateString); } catch { return ''; }
+  if (isNaN(date.getTime())) return '';
   return formatDistanceToNow(date, { addSuffix: true });
 };
 
-export const formatDeadline = (dateString: string): string => {
-  const date = parseISO(dateString);
+export const formatDeadline = (dateString?: string): string => {
+  if(!dateString) return '';
+  let date: Date; try { date = parseISO(dateString); } catch { return ''; }
+  if (isNaN(date.getTime())) return '';
   const now = new Date();
-  
   if (date < now) {
     return `${t('common.overdue')} (${formatRelativeDate(dateString)})`;
   }
-  
   if (isToday(date)) {
     return t('common.dueToday');
   }
-  
   return `Due ${formatRelativeDate(dateString)}`;
 };
 
-export const getInitials = (name: string): string => {
-  return name
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase())
-    .join('')
-    .slice(0, 2);
+export const getInitials = (name?: string | null): string => {
+  if (!name) return '';
+  const cleaned = name.trim();
+  if (!cleaned) return '';
+  return cleaned
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map(part => part.charAt(0).toUpperCase())
+    .join('');
 };
 
 export const truncateText = (text: string, maxLength: number): string => {

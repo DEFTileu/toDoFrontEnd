@@ -3,6 +3,8 @@ export interface User {
   email: string;
   name: string;
   createdAt: string;
+  emailNotification: boolean;
+  pushNotification: boolean;
   avatar?: string;
 }
 
@@ -96,5 +98,6 @@ export interface ToastMessage {
   type: 'success' | 'error' | 'warning' | 'info';
   message: string;
   duration?: number;
+  isNotification?: boolean; // Новый параметр для push-уведомлений
 }
 export type TaskStatus = 'todo' | 'in-progress' | 'done';

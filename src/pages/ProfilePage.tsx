@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { User, Settings, Calendar, CheckSquare, Clock, Target, TrendingUp, Edit, Award, Activity, Bell } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useTasks } from '../contexts/TasksContext';
 import { useToast } from '../contexts/ToastContext';
+import { useNotification } from '../contexts/NotificationContext';
 import { useTranslation } from '../hooks/useTranslation';
 import { Modal } from '../components/common/Modal';
 import { ProfileForm } from '../components/profile/ProfileForm';
@@ -11,6 +12,7 @@ import { Button } from '../components/common/Button';
 import { formatDate, getInitials } from '../utils/formatters';
 import { ChangePasswordModal } from '../components/profile/ChangePasswordModal';
 import { NotificationToggle } from '../components/common/NotificationToggle';
+import PushNotificationToggle from '../components/common/PushNotificationToggle';
 import { User as UserType } from '../types';
 
 export const ProfilePage: React.FC = () => {
@@ -18,6 +20,7 @@ export const ProfilePage: React.FC = () => {
   const { tasks, fetchTasks } = useTasks();
   const { showToast } = useToast();
   const { t } = useTranslation();
+  const { setPushEnabledState, setEmailEnabledState: setEmailEnabledStateFn, emailEnabled } = useNotification(); // emailEnabled state from NotificationContext
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
@@ -25,6 +28,18 @@ export const ProfilePage: React.FC = () => {
   useEffect(() => {
     fetchTasks();
   }, [fetchTasks]);
+
+  // Инициализация состояния у��едомлений только один раз при загрузке пользователя
+  const initNotifsRef = useRef(false);
+  useEffect(() => {
+    if (user && !initNotifsRef.current) {
+      // pushNotification поле удалено – берём только emailNotification
+      if ((user as any).emailNotification !== undefined) {
+        setEmailEnabledStateFn(user.emailNotification);
+      }
+      initNotifsRef.current = true;
+    }
+  }, [user, setPushEnabledState, setEmailEnabledStateFn]);
 
   if (!user) {
     return null;
@@ -99,7 +114,7 @@ export const ProfilePage: React.FC = () => {
                           />
                       ) : (
                           <div className="w-24 h-24 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold border-4 border-white shadow-lg">
-                            {getInitials(user.name)}
+                            {getInitials(user.name || user.email)}
                           </div>
                       )}
                     </div>
@@ -326,14 +341,16 @@ export const ProfilePage: React.FC = () => {
                       <NotificationToggle
                           id="email-notifications"
                           label={t('profile.emailNotifications')}
-                          description="Receive email updates about task changes and project updates"
-                          initialValue={true}
+                          description="Получать обновления по электронной почте о задачах и проектах"
+                          initialValue={emailEnabled}
                           onChange={(value) => handleNotificationChange('Email', value)}
+                          type="email"
                       />
+                      <PushNotificationToggle className="mt-3" />
                       <NotificationToggle
                           id="task-reminders"
                           label={t('profile.taskReminders')}
-                          description="Get reminded about upcoming task deadlines"
+                          description="Получать напоминания о предстоящих сроках задач"
                           initialValue={false}
                           onChange={(value) => handleNotificationChange('Task reminder', value)}
                       />

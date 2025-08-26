@@ -65,7 +65,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, index, onTaskClick}) =
             >
 
               <div
-                  className="p-4 pl-8 cursor-pointer"
+                  className="p-4 cursor-pointer"
                   onClick={() => onTaskClick(task.id)}
               >
                 {/* Task Header */}
