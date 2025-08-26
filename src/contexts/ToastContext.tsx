@@ -3,7 +3,7 @@ import { ToastMessage } from '../types';
 
 interface ToastContextType {
   toasts: ToastMessage[];
-  showToast: (message: string, type?: ToastMessage['type'], duration?: number) => void;
+  showToast: (message: string, type?: ToastMessage['type'], duration?: number, isNotification?: boolean) => void;
   removeToast: (id: string) => void;
 }
 
@@ -19,11 +19,12 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const showToast = useCallback((
     message: string,
     type: ToastMessage['type'] = 'info',
-    duration = 5000
+    duration = 5000,
+    isNotification = false
   ) => {
     const id = Math.random().toString(36).substr(2, 9);
-    const toast: ToastMessage = { id, message, type, duration };
-    
+    const toast: ToastMessage = { id, message, type, duration, isNotification };
+
     setToasts(prev => [...prev, toast]);
     
     if (duration > 0) {

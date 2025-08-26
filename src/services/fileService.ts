@@ -71,6 +71,7 @@ export const uploadFile = async (file: File): Promise<string> => {
     const data = await response.json();
 
     // Проверяем, что в ответе есть URL
+
     if (!data.url) {
       throw new Error('Сервер не вернул URL файла');
     }

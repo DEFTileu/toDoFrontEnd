@@ -1,4 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { updateEmailNotificationSettings } from '../../services/emailNotificationService';
+import { useNotification } from '../../contexts/NotificationContext';
+import { useAuth } from '../../contexts/AuthContext';
+import { userStorage } from '../../services/userStorage';
 
 interface NotificationToggleProps {
   id: string;
@@ -7,6 +11,7 @@ interface NotificationToggleProps {
   initialValue?: boolean;
   onChange: (value: boolean) => void;
   disabled?: boolean;
+  type?: 'email' | 'other'; // Тип переключателя: email или другой
 }
 
 export const NotificationToggle: React.FC<NotificationToggleProps> = ({
@@ -15,16 +20,53 @@ export const NotificationToggle: React.FC<NotificationToggleProps> = ({
   description,
   initialValue = false,
   onChange,
-  disabled = false
+  disabled = false,
+  type = 'other'
 }) => {
-  const [isEnabled, setIsEnabled] = useState(initialValue);
+  const { emailEnabled, setEmailEnabledState } = useNotification();
+  const { setUserLocal } = useAuth();
+  const [isEnabled, setIsEnabled] = useState(type === 'email' ? emailEnabled : initialValue);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleToggle = () => {
-    if (disabled) return;
+  // Синхронизация с состоянием из контекста для email-уведомлений
+  useEffect(() => {
+    if (type === 'email') {
+      setIsEnabled(emailEnabled);
+    }
+  }, [emailEnabled, type]);
+
+  const handleToggle = async () => {
+    if (disabled || isLoading) return;
 
     const newValue = !isEnabled;
-    setIsEnabled(newValue);
-    onChange(newValue);
+    setIsLoading(true);
+
+    try {
+      // Если это email-уведомления, отправляем запрос на бэкенд
+      if (type === 'email') {
+        const success = await updateEmailNotificationSettings(newValue);
+        if (!success) {
+          console.error('Не удалось обновить настройки email-уведомлений');
+          return;
+        }
+        setEmailEnabledState(newValue);
+        // Мгновенно патчим локального пользователя чтобы при навигации не сбрасывалось
+        try {
+          userStorage.update({ emailNotification: newValue });
+          setUserLocal({ emailNotification: newValue });
+        } catch {}
+        // Обновляем пользователя из бэкенда (если endpoint обновляет БД)
+        // refreshUser() удалено чтобы не перезаписывать профиль после toggle
+      }
+
+      // Обновляем состояние переключателя
+      setIsEnabled(newValue);
+      onChange(newValue);
+    } catch (error) {
+      console.error('Ошибка при изменении настроек уведомлений:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -48,7 +90,7 @@ export const NotificationToggle: React.FC<NotificationToggleProps> = ({
         aria-checked={isEnabled}
         aria-labelledby={`${id}-label`}
         onClick={handleToggle}
-        disabled={disabled}
+        disabled={disabled || isLoading}
         className={`
           relative inline-flex h-7 w-12 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent 
           transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2
@@ -57,7 +99,7 @@ export const NotificationToggle: React.FC<NotificationToggleProps> = ({
             ? 'bg-indigo-600 hover:bg-indigo-700' 
             : 'bg-gray-200 hover:bg-gray-300'
           }
-          ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
+          ${disabled || isLoading ? 'opacity-50 cursor-not-allowed' : ''}
         `}
       >
         <span className="sr-only">{label}</span>

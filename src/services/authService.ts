@@ -1,5 +1,6 @@
 import { User } from '../types';
 import { fetchWithAuth, fetchWithTimeout, tokenStorage, API_ENDPOINTS, ERROR_MESSAGES, API_CONFIG } from './apiConfig';
+import { userStorage } from './userStorage';
 /**
  * AuthService - профессиональный сервис аутентификации
  * Работает только с реальным API
@@ -37,8 +38,11 @@ class AuthService {
         refreshToken: data.refreshToken
       });
 
+      localStorage.setItem('email_notifications_enabled',data.user.emailNotification);
+      localStorage.setItem('push_notifications_enabled',data.user.pushNotification);
+
       // Сохраняем данные пользователя
-      localStorage.setItem('auth_user', JSON.stringify(data.user));
+      userStorage.store(data.user);
 
       // Возвращаем весь ответ, так как он может понадобиться в компоненте
       return data;
@@ -75,7 +79,7 @@ class AuthService {
   }
 
   /**
-   * Получение данных текущего пользователя
+   * Получение данных текущего пользовате��я
    */
   async getCurrentUser(): Promise<User | null> {
     try {
@@ -89,8 +93,9 @@ class AuthService {
         return null;
       }
 
-      const user = await response.json();
-      localStorage.setItem('auth_user', JSON.stringify(user));
+      const data = await response.json();
+      const user: User = data.user;
+      userStorage.store(user);
       return user;
     } catch (error) {
       this.logout();
@@ -146,18 +151,22 @@ class AuthService {
    */
   async logout(): Promise<void> {
     try {
+      const refreshToken = tokenStorage.getRefreshToken();
       await fetchWithAuth(
         `${API_CONFIG.BASE_URL}${API_ENDPOINTS.LOGOUT}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ refreshToken })
         }
       );
     } catch (error) {
       console.warn('Logout request failed:', error);
     } finally {
+      const savedLang = localStorage.getItem('app_language');
+      try { localStorage.clear(); } catch {}
+      if (savedLang) localStorage.setItem('app_language', savedLang);
       tokenStorage.clearTokens();
-      localStorage.removeItem('auth_user');
     }
   }
 
@@ -181,7 +190,7 @@ class AuthService {
     }
 
     // Обновляем данные в localStorage
-    localStorage.setItem('auth_user', JSON.stringify(responseData));
+    userStorage.store(responseData);
 
     return responseData;
   }
@@ -208,7 +217,7 @@ class AuthService {
     }
 
     // Обновляем данные в localStorage
-    localStorage.setItem('auth_user', JSON.stringify(data));
+    userStorage.store(data);
 
     return data;
   }
@@ -242,8 +251,8 @@ class AuthService {
    */
   getStoredUser(): User | null {
     try {
-      const userData = localStorage.getItem('auth_user');
-      return userData ? JSON.parse(userData) : null;
+      const userData = userStorage.get();
+      return userData ? userData : null;
     } catch {
       return null;
     }

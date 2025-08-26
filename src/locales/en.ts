@@ -298,6 +298,15 @@ export const en = {
     sprintName: 'Sprint Name',
     sprintGoal: 'Sprint Goal',
   },
-};
+
+  // Notifications
+  notifications: {
+    types: {
+      TASK: '📋 Task',
+      SPRINT: '🏃 Sprint',
+      SYSTEM: '⚙️ System'
+    }
+  },
+} as const;
 
 export type TranslationKeys = typeof en;

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider } from './contexts/AuthContext';
 import { TasksProvider } from './contexts/TasksContext';
 import { ToastProvider } from './contexts/ToastContext';
+import { NotificationProvider } from './contexts/NotificationContext';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
 import { Navbar } from './components/navigation/Navbar';
@@ -20,49 +21,51 @@ function App() {
       <ToastProvider>
         <LanguageProvider>
           <AuthProvider>
-            <TasksProvider>
-              <div className="min-h-screen bg-gray-50">
-                <Routes>
-                  {/* Public routes */}
-                  <Route path="/login" element={<LoginPage />} />
-                  <Route path="/register" element={<RegisterPage />} />
-                  
-                  {/* Protected routes */}
-                  <Route path="/tasks" element={
-                    <ProtectedRoute>
-                      <Navbar />
-                      <TasksPage />
-                    </ProtectedRoute>
-                  } />
-                  
-                  <Route path="/sprint-history" element={
-                    <ProtectedRoute>
-                      <Navbar />
-                      <SprintHistoryPage />
-                    </ProtectedRoute>
-                  } />
-                  
-                  <Route path="/profile" element={
-                    <ProtectedRoute>
-                      <Navbar />
-                      <ProfilePage />
-                    </ProtectedRoute>
-                  } />
+            <NotificationProvider>
+              <TasksProvider>
+                <div className="min-h-screen bg-gray-50">
+                  <Routes>
+                    {/* Public routes */}
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/register" element={<RegisterPage />} />
 
-                  <Route path="/api-endpoints" element={
-                    <ProtectedRoute>
-                      <Navbar />
-                      <ApiEndpointsPage />
-                    </ProtectedRoute>
-                  } />
-                  
-                  {/* Default redirect */}
-                  <Route path="/" element={<Navigate to="/tasks" replace />} />
-                </Routes>
-                
-                <ToastContainer />
-              </div>
-            </TasksProvider>
+                    {/* Protected routes */}
+                    <Route path="/tasks" element={
+                      <ProtectedRoute>
+                        <Navbar />
+                        <TasksPage />
+                      </ProtectedRoute>
+                    } />
+
+                    <Route path="/sprint-history" element={
+                      <ProtectedRoute>
+                        <Navbar />
+                        <SprintHistoryPage />
+                      </ProtectedRoute>
+                    } />
+
+                    <Route path="/profile" element={
+                      <ProtectedRoute>
+                        <Navbar />
+                        <ProfilePage />
+                      </ProtectedRoute>
+                    } />
+
+                    <Route path="/api-endpoints" element={
+                      <ProtectedRoute>
+                        <Navbar />
+                        <ApiEndpointsPage />
+                      </ProtectedRoute>
+                    } />
+
+                    {/* Default redirect */}
+                    <Route path="/" element={<Navigate to="/tasks" replace />} />
+                  </Routes>
+
+                  <ToastContainer />
+                </div>
+              </TasksProvider>
+            </NotificationProvider>
           </AuthProvider>
         </LanguageProvider>
       </ToastProvider>

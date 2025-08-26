@@ -33,6 +33,8 @@ export const API_ENDPOINTS = {
   SPRINT_BY_ID: (id: string) => `/sprints/${id}`,
   SPRINT_TASKS: (id: string) => `/sprints/${id}/tasks`,
   ACTIVE_SPRINT: '/sprints/active',
+
+  NOTIFICATIONS: '/notifications',
 } as const;
 
 // HTTP status codes
