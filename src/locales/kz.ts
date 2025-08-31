@@ -36,7 +36,7 @@ export const kz: TranslationKeys = {
 
     // Validation messages
     emailRequired: 'Email міндетті',
-    invalidEmail: 'Жарамсыз email мекенжайы',
+    invalidEmail: 'Жарамсыз email мекенжа��ы',
     passwordRequired: 'Құпия сөз міндетті',
     passwordMinLength: 'Құпия сөз кемінде 6 таңбадан тұруы керек',
     nameRequired: 'Аты міндетті',
@@ -177,6 +177,16 @@ export const kz: TranslationKeys = {
     formattingTips: 'Пішімдеу кеңестері:',
     formattingExamples: '**қалың**, *курсив*, - маркерлі тізім, 1. нөмірленген тізім',
     count: '{{count}} пікір',
+
+    // Delete comment modal
+    delete: 'Жою',
+    deleteConfirm: 'Пікірді жою керек пе?',
+    deleteTitle: 'Пікірді жою',
+    deleteMessage: 'Бұл пікірді жойғыңыз келе ме? Бұл әрекетті қайтару мүмкін емес.',
+    deleteSuccess: 'Пікір сәтті жойылды',
+    deleteError: 'Пікірді жою мүмкін болмады',
+    deleteButton: 'Пікірді жою',
+    keepComment: 'Пікірді қалдыру',
   },
 
   // Profile
@@ -189,7 +199,7 @@ export const kz: TranslationKeys = {
     memberSince: 'Мүше болған уақыт',
     productivityStats: 'Өнімділік Статистикасы',
     completionRate: 'Орындау Пайызы',
-    currentStreak: 'Ағымдағы Серия',
+    currentStreak: 'Ағым��ағы Серия',
     bestStreak: 'Ең Жақсы Серия',
     quickActions: 'Жылдам Әрекеттер',
     accountSettings: 'Аккаунт Баптаулары',
@@ -216,7 +226,7 @@ export const kz: TranslationKeys = {
 
     // Messages
     profileUpdatedSuccess: 'Профиль сәтті жаңартылды!',
-    avatarUpdatedSuccess: 'Аватар сәтті жаңартылды!',
+    avatarUpdatedSuccess: 'Аватар сәтті ��аңартылды!',
     failedToUpdateProfile: 'Профильді жаңарту сәтсіз аяқталды',
     failedToUploadAvatar: 'Аватарды жүктеу сәтсіз аяқталды',
   },
@@ -277,7 +287,7 @@ export const kz: TranslationKeys = {
   // API Documentation
   api: {
     title: 'API Құжаттамасы',
-    subtitle: 'TaskFlow қолданбасы үшін толық backend API анықтамасы',
+    subtitle: 'TaskFlow қолданбасы үшін тол��қ backend API анықтамасы',
     baseUrl: 'Негізгі URL',
     authentication: 'Аутентификация',
     dataModels: 'Деректер Модельдері',

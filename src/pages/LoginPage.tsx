@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
 import { useTranslation } from '../hooks/useTranslation';
@@ -11,6 +11,10 @@ export const LoginPage: React.FC = () => {
   const { showToast } = useToast();
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Получаем страницу, с которой пользователь был перенаправлен
+  const from = location.state?.from?.pathname || '/tasks';
 
   if (loading) {
     return (
@@ -21,7 +25,7 @@ export const LoginPage: React.FC = () => {
   }
 
   if (isAuthenticated) {
-    return <Navigate to="/tasks" replace />;
+    return <Navigate to={from} replace />;
   }
 
   const handleLogin = async (data: LoginData) => {
@@ -30,7 +34,7 @@ export const LoginPage: React.FC = () => {
       // Сервер вернул успешный ответ с токенами и данными пользователя
       if (response.success && response.accessToken && response.user) {
         showToast(t('common.welcomeMessage'), 'success');
-        navigate('/tasks');
+        navigate(from, { replace: true });
       } else {
         throw new Error(t('auth.invalidCredentials'));
       }

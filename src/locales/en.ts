@@ -168,12 +168,22 @@ export const en = {
     post: 'Post Comment',
     addSuccess: 'Comment added successfully',
     addError: 'Failed to add comment',
+    deleteSuccess: 'Comment deleted successfully',
+    deleteError: 'Failed to delete comment',
+    deleteConfirm: 'Are you sure you want to delete this comment?',
+    delete: 'Delete',
     title: 'Comments',
     addLabel: 'Add a comment',
     placeholderRich: 'Write your comment here... You can use **bold**, *italic*, and lists!',
     formattingTips: 'Formatting tips:',
     formattingExamples: 'Use **bold**, *italic*, - bullet lists, 1. numbered lists',
     count: '{{count}} comments',
+
+    // Delete comment modal
+    deleteTitle: 'Delete Comment',
+    deleteMessage: 'Are you sure you want to delete this comment? This action cannot be undone.',
+    deleteButton: 'Delete Comment',
+    keepComment: 'Keep Comment',
   },
 
   // Profile

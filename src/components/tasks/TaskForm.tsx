@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from '../../hooks/useTranslation';
 import { CreateTaskData } from '../../types';
 import { Button } from '../common/Button';
 import { Input } from '../common/Input';
 import RichTextEditor from '../common/RichTextEditor';
+import { tasksService } from '../../services/tasksService';
 
 interface TaskFormProps {
-  initialData?: Partial<CreateTaskData>;
+  initialData?: Partial<CreateTaskData> & { id?: string };
   onSubmit: (data: CreateTaskData) => Promise<void>;
   onCancel: () => void;
   submitLabel?: string;
@@ -36,6 +37,23 @@ export const TaskForm: React.FC<TaskFormProps> = ({
     }
   });
   const { t } = useTranslation();
+
+  // Обработчик автосохранения чекбоксов
+  const handleCheckboxChange = useCallback(async (content: string) => {
+    if (initialData?.id) {
+      try {
+        // Автосохранение описания задачи при изменении чекбоксов
+        await tasksService.updateTask({
+          id: initialData.id,
+          description: content
+        });
+        setValue('description', content);
+        console.log('Checkbox state auto-saved');
+      } catch (error) {
+        console.error('Failed to auto-save checkbox state:', error);
+      }
+    }
+  }, [initialData?.id, setValue]);
 
   const handleFormSubmit = async (data: CreateTaskData) => {
     try {
@@ -81,6 +99,7 @@ export const TaskForm: React.FC<TaskFormProps> = ({
           <RichTextEditor
             content={watch('description') || ''}
             onChange={(content) => setValue('description', content)}
+            onCheckboxChange={handleCheckboxChange}
             placeholder={t('tasks.enterTaskDescription')}
             minHeight="250px"
             className="border-gray-300 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500"
