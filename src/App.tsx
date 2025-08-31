@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { TasksProvider } from './contexts/TasksContext';
@@ -14,6 +13,23 @@ import { TasksPage } from './pages/TasksPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { SprintHistoryPage } from './pages/SprintHistoryPage';
 import { ApiEndpointsPage } from './pages/ApiEndpointsPage';
+import { useAuth } from './contexts/AuthContext';
+import { LoadingSpinner } from './components/common/LoadingSpinner';
+
+// Компонент для обработки корневого маршрута
+const RootRedirect = () => {
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <LoadingSpinner size="lg" text="Loading..." />
+      </div>
+    );
+  }
+
+  return <Navigate to={isAuthenticated ? "/tasks" : "/login"} replace />;
+};
 
 function App() {
   return (
@@ -58,8 +74,8 @@ function App() {
                       </ProtectedRoute>
                     } />
 
-                    {/* Default redirect */}
-                    <Route path="/" element={<Navigate to="/tasks" replace />} />
+                    {/* Smart root redirect based on authentication status */}
+                    <Route path="/" element={<RootRedirect />} />
                   </Routes>
 
                   <ToastContainer />

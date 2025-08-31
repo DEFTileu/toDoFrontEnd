@@ -176,6 +176,16 @@ export const ru: TranslationKeys = {
       formattingTips: 'Советы по форматированию:',
       formattingExamples: 'Используйте **жирный**, *курсив*, - маркеры, 1. нумерованные списки',
       count: '{{count}} комментариев',
+
+      // Удаление комментария
+      delete: 'Удалить',
+      deleteConfirm: 'Удалить комментарий?',
+      deleteTitle: 'Удаление комментария',
+      deleteMessage: 'Вы уверены, что хотите удалить этот комментарий? Это действие нельзя отменить.',
+      deleteSuccess: 'Комментарий успешно удален',
+      deleteError: 'Не удалось удалить комментарий',
+      deleteButton: 'Удалить комментарий',
+      keepComment: 'Оставить комментарий',
     },
 
 // Профиль
@@ -210,7 +220,7 @@ export const ru: TranslationKeys = {
       // Загрузка аватара
       uploadAvatar: 'Загрузить',
       cancelUpload: 'Отменить загрузку',
-      changeAvatar: 'Изменить аватар',
+      changeAvatar: '��зменить аватар',
       supportedFormats: 'Поддерживаемые форматы: JPG, PNG, GIF. Максимальный размер: 5 МБ',
 
       // Сообщения
@@ -239,8 +249,8 @@ export const ru: TranslationKeys = {
       overdue: 'Просрочено',
 
       // Кнопки
-      showPassword: 'Показать пароль',
-      hidePassword: 'Скрыть пароль',
+      showPassword: 'Показа��ь пароль',
+      hidePassword: 'Скрыть парол��',
       closeModal: 'Закрыть модальное окно',
       closeNotification: 'Закрыть уведомление',
       cancel: 'Отменить',
@@ -285,7 +295,7 @@ export const ru: TranslationKeys = {
       requestBody: 'Тело запроса',
       successResponse: 'Успешный ответ',
       errorResponses: 'Ошибки ответа',
-      implementationGuidelines: 'Руководство по реализации',
+      implementationGuidelines: 'Руководство по реализац��и',
       generalRequirements: 'Общие требования',
       securityPerformance: 'Безопасность и производительность',
     },

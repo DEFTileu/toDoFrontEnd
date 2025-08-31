@@ -151,7 +151,7 @@ export const Navbar: React.FC = () => {
                                   <button
                                       key={lang.code}
                                       onClick={() => handleLanguageChange(lang.code)}
-                                      className={`w-full text-left px-2 py-1 text-xs rounded transition-colors ${
+                                      className={`w-full text-left px-2 py-1 text-xs rounded transition-colors min-h-[35px] min-w-[35px] ${
                                           language === lang.code
                                               ? 'bg-indigo-50 text-indigo-700'
                                               : 'text-gray-600 hover:bg-gray-50'

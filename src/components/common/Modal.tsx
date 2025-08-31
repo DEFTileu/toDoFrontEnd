@@ -81,7 +81,7 @@ export const Modal: React.FC<ModalProps> = ({
           )}
           
           {/* Content */}
-          <div className={`${title ? 'p-4 sm:p-6' : 'p-4 sm:p-6'} overflow-y-auto max-h-[calc(90vh-120px)]`}>
+          <div className={`${title ? 'p-4 sm:p-6' : 'p-4 sm:p-6'} overflow-y-auto max-h-[calc(90vh-120px)] scrollbar-ultra-thin`}>
             {children}
           </div>
         </div>

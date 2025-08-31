@@ -10,6 +10,7 @@ interface TasksContextType extends TasksState {
   deleteTask: (id: string) => Promise<void>;
   updateTaskStatus: (id: string, status: 'todo' | 'in-progress' | 'done') => Promise<void>;
   addComment: (taskId: string, content: string) => Promise<void>;
+  deleteComment: (taskId: string, commentId: string) => Promise<void>;
 }
 
 const TasksContext = createContext<TasksContextType | undefined>(undefined);
@@ -140,6 +141,15 @@ export const TasksProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   }
 }, []);
 
+const deleteComment = useCallback(async (taskId: string, commentId: string) => {
+  try {
+    const updatedTask = await tasksService.deleteComment(taskId, commentId);
+    dispatch({ type: 'UPDATE_TASK', payload: updatedTask });
+  } catch (error) {
+    throw error;
+  }
+}, []);
+
 
   const value: TasksContextType = {
     ...state,
@@ -150,6 +160,7 @@ export const TasksProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     deleteTask,
     updateTaskStatus,
     addComment,
+    deleteComment,
   };
 
   return <TasksContext.Provider value={value}>{children}</TasksContext.Provider>;

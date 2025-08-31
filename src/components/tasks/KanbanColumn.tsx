@@ -58,7 +58,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={`flex-1 p-2 sm:p-4 space-y-3 min-h-[200px] transition-colors ${
+            className={`flex-1 p-2 sm:p-4 space-y-3 min-h-[200px] max-h-[calc(100vh-300px)] overflow-y-auto scrollbar-thin transition-colors ${
               snapshot.isDraggingOver ? 'bg-opacity-70' : ''
             }`}
           >

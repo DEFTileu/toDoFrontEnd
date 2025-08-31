@@ -25,7 +25,6 @@ export interface Task {
 
 export interface TaskComment {
   id: string;
-  userId: string;
   user: User;
   content: string;
   createdAt: string;

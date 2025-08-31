@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, Edit3, Trash2, User, Target, CheckCircle, AlertCircle, MessageSquare, Send } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Calendar, Clock, Edit3, Trash2, User, Target, CheckCircle, AlertCircle, MessageSquare} from 'lucide-react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useTasks } from '../../contexts/TasksContext';
 import { useToast } from '../../contexts/ToastContext';
@@ -7,8 +7,9 @@ import { TaskPreview } from '../../types';
 import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
 import { LoadingSpinner } from '../common/LoadingSpinner';
-import { formatDate, formatDeadline, getInitials } from '../../utils/formatters';
-import RichTextEditor from '../common/RichTextEditor.tsx';
+import { formatDate, formatDeadline } from '../../utils/formatters';
+import RichTextEditor from '../common/RichTextEditor';
+import { TaskComments } from './TaskComments';
 
 interface TaskPreviewModalProps {
   taskId: string | null;
@@ -18,16 +19,16 @@ interface TaskPreviewModalProps {
 }
 
 export const TaskPreviewModal: React.FC<TaskPreviewModalProps> = ({
-                                                                    taskId,
-                                                                    isOpen,
-                                                                    onClose,
-                                                                    onEdit
-                                                                  }) => {
+  taskId,
+  isOpen,
+  onClose,
+  onEdit
+}) => {
   const [taskPreview, setTaskPreview] = useState<TaskPreview | null>(null);
   const [loading, setLoading] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [newComment, setNewComment] = useState('');
-  const [addingComment, setAddingComment] = useState(false);
+  const {setAddingComment: setAddingComment} = useState(false);
   const [editingDescription, setEditingDescription] = useState(false);
   const [editingStatus, setEditingStatus] = useState(false);
   const [tempDescription, setTempDescription] = useState('');
@@ -139,6 +140,67 @@ export const TaskPreviewModal: React.FC<TaskPreviewModalProps> = ({
       showToast(t('tasks.failedToUpdateStatus'), 'error');
     }
   };
+
+  // Обработчик кликов по чекбоксам в отображаемом описании
+  const handleDescriptionClick = useCallback(async (event: React.MouseEvent) => {
+    const target = event.target as HTMLElement;
+
+    // Проверяем, что кликнули по чекбоксу
+    if (target.tagName === 'INPUT' && target.getAttribute('type') === 'checkbox') {
+      if (!taskId || !taskPreview) return;
+
+      // Небольшая задержка для обновления состояния чекбокса
+      setTimeout(async () => {
+        // Получаем обновленный HTML из DOM
+        const descriptionElement = event.currentTarget as HTMLElement;
+        const updatedHTML = descriptionElement.innerHTML;
+
+        try {
+          // Сохраняем изменения в базу данных
+          await updateTask({
+            id: taskId,
+            description: updatedHTML
+          });
+
+          // Обновляем локальное состояние
+          setTaskPreview(prev => prev ? {
+            ...prev,
+            task: { ...prev.task, description: updatedHTML }
+          } : null);
+          setTempDescription(updatedHTML);
+
+          showToast('Состояние чекбокса сохранено', 'success');
+        } catch (error) {
+          console.error('Failed to save checkbox state:', error);
+          showToast('Ошибка сохранения чекбокса', 'error');
+        }
+      }, 100);
+    }
+  }, [taskId, taskPreview, updateTask, showToast]);
+
+  const handleCheckboxChange = useCallback(async (content: string) => {
+    if (taskId && taskPreview) {
+      try {
+        // Автосохранение описания задачи при изменени�� чекбоксов
+        await updateTask({
+          id: taskId,
+          description: content
+        });
+
+        // Обновляем локальное состояние
+        setTaskPreview(prev => prev ? {
+          ...prev,
+          task: { ...prev.task, description: content }
+        } : null);
+        setTempDescription(content);
+
+        showToast('Состояние чекбокса сохранено', 'success');
+      } catch (error) {
+        console.error('Failed to auto-save checkbox state:', error);
+        showToast('Ошибка автосохр��нения чекбокса', 'error');
+      }
+    }
+  }, [taskId, taskPreview, updateTask, showToast]);
 
   const getStatusClasses = (status: string) => {
     switch (status) {
@@ -255,12 +317,14 @@ export const TaskPreviewModal: React.FC<TaskPreviewModalProps> = ({
                     <div
                         className="bg-gray-50 rounded-lg p-4 border border-gray-200 min-h-[100px] cursor-pointer hover:bg-gray-100 transition-colors"
                         onDoubleClick={() => setEditingDescription(true)}
+                        onClick={handleDescriptionClick} // Добавляем обработчик клика
                     >
                       {editingDescription ? (
                           <div className="space-y-3">
                             <RichTextEditor
                                 content={tempDescription}
                                 onChange={setTempDescription}
+                                onCheckboxChange={handleCheckboxChange}
                                 placeholder={t('tasks.enterTaskDescription')}
                                 minHeight="150px"
                                 className="border-0"
@@ -285,7 +349,7 @@ export const TaskPreviewModal: React.FC<TaskPreviewModalProps> = ({
                             </div>
                           </div>
                       ) : (
-                          <div className="prose prose-sm max-w-none">
+                          <div className="prose prose-sm max-w-none rich-text-content">
                             {taskPreview.task.description ? (
                                 <div dangerouslySetInnerHTML={{ __html: taskPreview.task.description }} />
                             ) : (
@@ -298,93 +362,7 @@ export const TaskPreviewModal: React.FC<TaskPreviewModalProps> = ({
 
                   {/* Comments Section */}
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                      <MessageSquare className="w-5 h-5 mr-2" />
-                      {t('comments.title')} ({taskPreview.task.comments.length})
-                    </h3>
-
-                    {/* Comments List - показываем сразу */}
-                    <div className="space-y-4 mb-6">
-                      {taskPreview.task.comments.length === 0 ? (
-                          <div className="text-center py-8 text-gray-500 bg-gray-50 rounded-lg">
-                            <MessageSquare className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                            <p>{t('comments.noComments')}</p>
-                          </div>
-                      ) : (
-                          <div className="max-h-96 overflow-y-auto space-y-3">
-                            {taskPreview.task.comments.map((comment) => (
-                                <div key={comment.id} className="flex space-x-3 p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
-                                  <div className="flex-shrink-0">
-                                    {comment.user.avatar ? (
-                                        <img
-                                            src={comment.user.avatar}
-                                            alt={comment.user.name}
-                                            className="w-8 sm:w-10 h-8 sm:h-10 rounded-full object-cover ring-2 ring-indigo-100"
-                                            onError={(e) => {
-                                              // Fallback to initials if image fails to load
-                                              const target = e.target as HTMLImageElement;
-                                              target.style.display = 'none';
-                                              const fallback = target.nextElementSibling as HTMLElement;
-                                              if (fallback) fallback.style.display = 'flex';
-                                            }}
-                                        />
-                                    ) : null}
-                                    <div
-                                        className={`w-8 sm:w-10 h-8 sm:h-10 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-medium ${comment.user.avatar ? 'hidden' : 'flex'}`}
-                                    >
-                                      {getInitials(comment.user.name)}
-                                    </div>
-                                  </div>
-                                  <div className="flex-1 min-w-0">
-                                    <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 mb-2">
-                                      <span className="text-sm font-semibold text-gray-900">{comment.user.name}</span>
-                                      <span className="text-xs text-gray-500">{formatDate(comment.createdAt)}</span>
-                                    </div>
-                                    {/* Превью комментария с форматированием */}
-                                    <div
-                                        className="prose prose-sm max-w-none text-gray-700 [&_p]:mb-2 [&_ul]:my-2 [&_ol]:my-2 [&_li]:mb-1 [&_strong]:font-semibold [&_em]:italic [&_blockquote]:border-l-4 [&_blockquote]:border-gray-300 [&_blockquote]:pl-4 [&_blockquote]:italic [&_h2]:text-lg [&_h2]:font-bold [&_h2]:mb-2 [&_a]:text-blue-600 [&_a]:underline hover:[&_a]:text-blue-800 [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded"
-                                        dangerouslySetInnerHTML={{ __html: comment.content }}
-                                    />
-                                  </div>
-                                </div>
-                            ))}
-                          </div>
-                      )}
-                    </div>
-
-                    {/* Add Comment Form */}
-                    <form onSubmit={handleAddComment} className="border-t border-gray-200 pt-6">
-                      <div className="space-y-4">
-                        <div>
-                          <label htmlFor="comment" className="block text-sm font-medium text-gray-700 mb-2">
-                            {t('comments.addLabel')}
-                          </label>
-                          <div className="relative">
-                            <RichTextEditor
-                                content={newComment}
-                                onChange={setNewComment}
-                                placeholder={t('comments.placeholderRich')}
-                                minHeight="120px"
-                                className="border border-gray-300 rounded-lg"
-                            />
-                            <div className="mt-3 flex items-center justify-between">
-                              <div className="text-xs text-gray-500">
-                                <strong>{t('comments.formattingTips')}</strong> {t('comments.formattingExamples')}
-                              </div>
-                              <Button
-                                  type="submit"
-                                  loading={addingComment}
-                                  disabled={addingComment || !newComment.trim()}
-                                  size="sm"
-                              >
-                                <Send className="w-4 h-4 mr-2" />
-                                {t('comments.post')}
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </form>
+                    <TaskComments task={taskPreview.task} />
                   </div>
                 </div>
 

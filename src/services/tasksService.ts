@@ -176,9 +176,27 @@ export const tasksService = {
     }
   },
 
+  async deleteComment(taskId: string, commentId: string): Promise<Task> {
+    try {
+      const response = await fetchWithAuth(
+        `${API_CONFIG.BASE_URL}${API_ENDPOINTS.TASK_COMMENTS(taskId)}/${commentId}`,
+        {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+
+      const data = await handleApiResponse(response);
+      return data.task || data;
+    } catch (error) {
+      console.error('Delete comment error:', error);
+      throw error;
+    }
+  },
+
   async getSprints(): Promise<Sprint[]> {
 
-    
+
     try {
       const response = await fetchWithAuth(
         `${API_CONFIG.BASE_URL}${API_ENDPOINTS.SPRINTS}`,

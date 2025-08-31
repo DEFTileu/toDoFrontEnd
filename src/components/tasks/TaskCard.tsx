@@ -1,6 +1,6 @@
 import React from 'react';
 import { Draggable } from '@hello-pangea/dnd';
-import {Calendar, MessageSquare, Clock, CheckCircle, AlertCircle} from 'lucide-react';
+import {Calendar, MessageSquare, Clock, CheckCircle, AlertCircle, Circle, Play} from 'lucide-react';
 import { Task } from '../../types';
 import { formatDate, formatDeadline, truncateText } from '../../utils/formatters';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -18,9 +18,9 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, index, onTaskClick}) =
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'todo':
-        return <div className="w-3 h-3 rounded-full bg-blue-500 flex-shrink-0" />;
+        return <Circle className="w-5 h-5 text-blue-500 flex-shrink-0" />;
       case 'in-progress':
-        return <div className="w-3 h-3 rounded-full bg-yellow-500 flex-shrink-0" />;
+        return <Play className="w-5 h-5 text-yellow-500 flex-shrink-0" />;
       case 'done':
         return <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />;
       default:
@@ -81,20 +81,6 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, index, onTaskClick}) =
                     </h3>
                   </div>
                 </div>
-
-                {/* Task Description */}
-                {task.description && (
-                    <div className="mb-4">
-                      <p className="text-sm sm:text-base text-gray-600 leading-relaxed break-words">
-                  <span
-                      className="line-clamp-2"
-                      dangerouslySetInnerHTML={{
-                        __html: truncateText(task.description.replace(/<[^>]*>/g, ''), 120)
-                      }}
-                  />
-                      </p>
-                    </div>
-                )}
 
                 {/* Task Meta Information */}
                 <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
