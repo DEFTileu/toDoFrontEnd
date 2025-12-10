@@ -1,6 +1,6 @@
 // API Configuration for Spring Boot Backend
 export const API_CONFIG = {
-  BASE_URL: import.meta.env.VITE_API_BASE_URL || 'http://api-todo.javazhan.tech/api',
+  BASE_URL: import.meta.env.VITE_API_BASE_URL || 'https://api-todo.javazhan.tech/api',
   // BASE_URL: 'http://localhost:8080/api',
   TIMEOUT: 10000,
   REQUEST_TIMEOUT: 15000,
